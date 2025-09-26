@@ -1,6 +1,6 @@
 blueprint: page
 
-name: texte et titre
+name: Texte
 icon: text
 wysiwyg: true
 preview: text
@@ -10,12 +10,13 @@ fields:
     headings:
       - 2
       - 3
+      - 4
     placeholder: field.blocks.text.placeholder
     marks:
-      - bold
-      - italic
+      - underline
       - link
       - email
-      - code
     nodes:
       - heading
+      - bulletList
+      - orderedList

@@ -2,16 +2,6 @@ blueprint: page
 
 title: Project
 
-icon: 📖
-
-status:
-  draft:
-    label: Brouillon
-    text: Le spectacle est toujours en mode brouillon. Elle ne peut être vue que par les éditeurs ayant accès à l'administration.
-  listed:
-    label: Publié
-    text: Le spectacle est en ligne.
-
 columns:
   - width: 1/1
     fields:
@@ -20,5 +10,4 @@ columns:
         type: blocks
         label: Contenu
         fieldsets:
-          - textWithTitle
-          - video
+          - text
