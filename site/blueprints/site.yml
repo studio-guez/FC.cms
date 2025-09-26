@@ -4,7 +4,6 @@ sections:
   pages:
     label: Pages
     type: pages
-    layout: cards
     sortBy: manual
     templates:
         - default

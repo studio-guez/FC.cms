@@ -11,3 +11,4 @@ columns:
         label: Contenu
         fieldsets:
           - text
+          - image

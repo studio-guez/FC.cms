@@ -1,0 +1,48 @@
+name: Image
+icon: image
+wysiwyg: true
+preview: fields
+fields:
+  image:
+    label: false
+    type: files
+    multiple: false
+    uploads: false
+    layout: cards
+    query: site.find('images')
+  cornerRadius:
+    label: Angle arrondis
+    type: select
+    options:
+      - value: '10'
+        text: 10px
+      - value: '20'
+        text: 20px
+      - value: '40'
+        text: 40px 
+  color:
+    label: Couleur
+    type: color
+    mode: options
+    options:
+      - "1e1f19"
+      - "ed8ed9"
+      - "ea5932"
+      - "273aaa"
+      - "66aff3"
+      - "f5ca4f"
+      - "fffd58"
+      - "ed9275"
+      - "3b7834"
+      - "32576a"
+      - "ec7440"
+      - "252e30"
+      - "ae8d5a"
+      - "2a3260"
+      - "a1f7e1"
+      - "665ace"
+      - "bffa92"
+      - "683e3e"
+      - "312951"
+      - "7e7972"
+      - "fefc85"

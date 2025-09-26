@@ -1,0 +1,7 @@
+title: Images
+
+sections:
+  images:
+    label: Images
+    type: files
+    layout: cards
