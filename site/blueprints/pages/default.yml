@@ -1,6 +1,6 @@
 blueprint: page
 
-title: Project
+title: Page
 
 columns:
   - width: 1/1
