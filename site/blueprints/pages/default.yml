@@ -10,9 +10,8 @@ columns:
         type: layout
         layouts:
           - "1/1"
-          - "1/2"
         selector:
-          columns: 2
+          columns: 1
         fieldsets:
           - text
           - image
