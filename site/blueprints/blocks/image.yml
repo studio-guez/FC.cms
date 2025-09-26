@@ -20,6 +20,8 @@ fields:
         text: 20px
       - value: '40'
         text: 40px 
+      - value: '80'
+        text: 80px 
   color:
     label: Couleur
     type: color
