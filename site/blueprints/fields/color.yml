@@ -1,0 +1,15 @@
+label: Couleur
+type: color
+mode: options
+options:
+  - "000000"
+  - "a38900"
+  - "ad936e"
+  - "27bc9c"
+  - "5731bf"
+  - "f00136"
+  - "f246a1"
+  - "ee7378"
+  - "f2929e"
+  - "f36001"
+  - "ff6c2d"

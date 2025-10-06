@@ -1,0 +1,14 @@
+type: writer
+headings:
+  - 2
+  - 3
+  - 4
+placeholder: field.blocks.text.placeholder
+marks:
+  - underline
+  - link
+  - email
+nodes:
+  - heading
+  - bulletList
+  - orderedList
