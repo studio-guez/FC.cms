@@ -16,10 +16,6 @@ columns:
             type: headline
             label: Expériences
           experiences_layout: fields/layout
-      experiences_pages:
-        type: pages
-        label: Expériences
-        templates: experience
       objects:
         type: fields
         fields:
@@ -27,10 +23,6 @@ columns:
             type: headline
             label: Objets
           objects_layout: fields/layout
-      objects_pages:
-        type: pages
-        label: Objets
-        templates: object
       outro:
         type: fields
         fields:

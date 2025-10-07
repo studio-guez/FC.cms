@@ -3,12 +3,14 @@ icon: image
 wysiwyg: true
 preview: fields
 fields:
+  color: fields/color
   image:
     label: false
     type: files
     multiple: false
     uploads: false
     layout: cards
+    size: huge
     query: site.find('images')
   cornerRadius:
     label: Angles arrondis

@@ -1,14 +1,5 @@
 label: Contenu
-type: layout
-layouts:
-  - "1/1"
-selector:
-  columns: 1
+type: blocks
 fieldsets:
   - text
   - image
-settings:
-  fields:
-    color:
-      label: Couleur
-      extends: fields/color
