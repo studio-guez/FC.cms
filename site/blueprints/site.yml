@@ -1,9 +1,27 @@
-title: Contenu du site
+title: Home
 
-sections:
-  pages:
-    label: Pages
-    type: pages
-    sortBy: manual
-    templates:
-        - default
+columns:
+  - width: 2/2
+    fields:
+      header_color: fields/color
+      header:
+        label: En-tête
+        extends: fields/text
+  - width: 2/2
+    fields:
+      intro_layout: fields/layout
+  - width: 1/2
+    fields:
+      experiences_headline:
+        type: headline
+        label: Expériences
+      experiences_layout: fields/layout
+  - width: 1/2
+    fields:
+      objects_headline:
+        type: headline
+        label: Objets
+      objects_layout: fields/layout
+  - width: 2/2
+    fields:
+      outro_layout: fields/layout
