@@ -19,7 +19,7 @@ columns:
       experiences_pages:
         type: pages
         label: Expériences
-        templates: experiences
+        templates: experience
       objects:
         type: fields
         fields:
@@ -30,7 +30,7 @@ columns:
       objects_pages:
         type: pages
         label: Objets
-        templates: objects
+        templates: object
       outro:
         type: fields
         fields:
