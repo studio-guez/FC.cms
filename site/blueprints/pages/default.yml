@@ -3,49 +3,27 @@ blueprint: page
 title: Page
 
 columns:
-  - width: 2/3
-    sections:
-      intro:
-        type: fields
-        fields:
-          intro_layout: fields/layout
-      experiences:
-        type: fields
-        fields:
-          experiences_headline:
-            type: headline
-            label: Expériences
-          experiences_layout: fields/layout
-      objects:
-        type: fields
-        fields:
-          objects_headline:
-            type: headline
-            label: Objets
-          objects_layout: fields/layout
-      outro:
-        type: fields
-        fields:
-          outro_layout:
-            label: Contenu
-            type: layout
-            layouts:
-              - "1/1"
-            selector:
-              columns: 1
-            fieldsets:
-              - text
-              - image
-            settings:
-              fields:
-                color:
-                  label: Couleur
-                  extends: fields/color
-  - width: 1/3
+  - width: 2/2
     fields:
+      header_color: fields/color
       header:
-        label: Bloc en-tête
+        label: En-tête
         extends: fields/text
-      header_color:
-        label: Couleur de l'en-tête
-        extends: fields/color
+  - width: 2/2
+    fields:
+      intro_layout: fields/layout
+  - width: 1/2
+    fields:
+      experiences_headline:
+        type: headline
+        label: Expériences
+      experiences_layout: fields/layout
+  - width: 1/2
+    fields:
+      objects_headline:
+        type: headline
+        label: Objets
+      objects_layout: fields/layout
+  - width: 2/2
+    fields:
+      outro_layout: fields/layout
