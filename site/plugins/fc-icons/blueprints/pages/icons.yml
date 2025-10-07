@@ -1,0 +1,12 @@
+title: Icons
+
+sections:
+  files:
+    layout: table
+    limit: 100
+    text: false
+    columns:
+      tag: 
+        label: Texte à insérer
+    image:
+      back: white
