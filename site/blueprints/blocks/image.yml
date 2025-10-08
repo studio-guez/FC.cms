@@ -1,7 +1,6 @@
 name: Image
 icon: image
 wysiwyg: true
-preview: fields
 fields:
   color: fields/color
   image:

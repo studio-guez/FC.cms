@@ -1,7 +1,7 @@
 name: Texte
 icon: text
 wysiwyg: true
-preview: fields
+preview: text
 fields:
   color: fields/color
   text: fields/text

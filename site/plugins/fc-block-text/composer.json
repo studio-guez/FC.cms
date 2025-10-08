@@ -1,0 +1,16 @@
+{
+    "name": "maxesnee/fc-blocks",
+    "description": "Custom block previews for les Fantastiques Communs",
+    "license": "MIT",
+    "type": "kirby-plugin",
+    "version": "1.0.0",
+    "authors": [
+        {
+            "name": "Max Esnée",
+            "email": "contact@max-esnee.com"
+        }
+    ],
+    "require": {
+        "getkirby/composer-installer": "^1.1"
+    }
+}

@@ -1,14 +1,11 @@
 name: Lien
 icon: url
 wysiwyg: true
-preview: fields
 fields:
   color: fields/color
   label:
     type: text
     label: Texte
-    width: 1/2
   url:
     type: url
     label: URL
-    width: 1/2
