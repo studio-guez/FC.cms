@@ -1,0 +1,10 @@
+title: Icons
+
+sections:
+  icons:
+    limit: 100
+    label: Liste
+    query: page.icons
+    image:
+      cover: false
+      back: white

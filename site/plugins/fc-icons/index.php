@@ -1,8 +1,9 @@
 <?php
 
 use Kirby\Cms\App as Kirby;
+use Kirby\Query\Query;
 
-require __DIR__ . '/models/icons.php';
+require __DIR__ . '/src/models/icons.php';
 
 function getIconUrl($name) {
    $icons_dir = kirby()->root('assets') . '/icons';
@@ -31,9 +32,50 @@ Kirby::plugin('maxesnee/fc-icons', [
     ],
     // Blueprint for the Icons page in the panel
     'blueprints' => [
-        'pages/icons' => __DIR__ . '/blueprints/pages/icons.yml',
+        'pages/icons' => __DIR__ . '/src/blueprints/pages/icons.yml',
     ],
-    'components' => [
-        'file::version' => include __DIR__ . '/components/file-version.php'
-    ]
+    'sections' => [
+		'icons' => [
+			'props' => [
+				'label' => function ($label = 'Table') {
+					return $label;
+				},
+				'info' => function ($info = '') {
+					return $info;
+				},
+				'query' => function ($query = 'page.children') {
+					return $query;
+				},
+				'image' => function ($image = []) {
+					return $image;
+				}
+			],
+			'computed' => [
+				'items' => function() {
+					$query = new Query($this->query);
+					$result = $query->resolve(['page' => page($this->model()->id())])->toArray();
+					$output = [];
+					foreach ($result as $page) {
+						$item = [
+							'text' => $page['content']['tag'],
+							'info' => $this->info,
+							'image' => [
+								'back' => $this->image['back'],
+								'cover' => $this->image['cover'],
+								'src' => $page['url']
+							],
+							'buttons' => [
+								[
+									'icon' => 'copy'
+								]
+							]
+						];
+
+						$output[] = $item;
+					}
+					return $output;
+				}
+			]
+		]
+	]
 ]);

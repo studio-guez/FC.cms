@@ -1,14 +1,11 @@
 <?php
 
 use Kirby\Cms\Page;
-use Kirby\Cms\Files;
+use Kirby\Cms\Pages;
 
 class IconsPage extends Page {
-   public function files(): Files {
-      if ($this->files !== null) {
-         return $this->files;
-      }
 
+   public function icons(): Pages {
       $icons = [];
       $icons_dir = kirby()->root('assets') . '/icons';
       $icons_url = kirby()->url('assets') . '/icons';
@@ -17,11 +14,11 @@ class IconsPage extends Page {
          if (str_contains($file, ".svg")) {
                $name = str_replace(".svg", "", $file);
                $name = str_replace("icon-", "", $name);
+
                $icons[] =  [
-                  'filename' => $file,
-                  'root' => $icons_dir . '/' . $file,
+                  'slug' => $file,
                   'url' => $icons_url . '/' . $file,
-                  'template' => 'virtual-icon',
+                  'template' => 'icon',
                   'content' => [
                      'tag' => "(icon: $name)"
                   ]
@@ -29,6 +26,6 @@ class IconsPage extends Page {
          }
       }
 
-      return $this->files = Files::factory($icons, $this);
+      return Pages::factory($icons, $this);
    }
 }
