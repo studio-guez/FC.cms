@@ -20,7 +20,10 @@ Kirby::plugin('maxesnee/fc-icons', [
     'tags' => [
         'icon' => [
             'html' => function($tag) {
-                return file_get_contents(getIconUrl($tag->value));
+                $icon_url = getIconUrl($tag->value);
+                if ($icon_url !== null) {
+                    return file_get_contents(getIconUrl($tag->value));
+                }
             }
         ]
     ],
