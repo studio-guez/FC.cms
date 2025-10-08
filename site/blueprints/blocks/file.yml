@@ -4,7 +4,7 @@ wysiwyg: true
 preview: fields
 fields:
   color: fields/color
-  label:
+  text:
     type: text
     label: Texte
     width: 1/2

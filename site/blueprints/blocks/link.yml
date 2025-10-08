@@ -8,7 +8,7 @@ fields:
     type: text
     label: Texte
     width: 1/2
-  file:
+  url:
     type: url
     label: URL
     width: 1/2
