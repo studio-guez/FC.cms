@@ -3,3 +3,5 @@ type: blocks
 fieldsets:
   - text
   - image
+  - file
+  - link

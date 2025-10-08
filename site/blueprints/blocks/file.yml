@@ -1,0 +1,15 @@
+name: Fichier
+icon: download
+wysiwyg: true
+preview: fields
+fields:
+  color: fields/color
+  label:
+    type: text
+    label: Texte
+    width: 1/2
+  file:
+    type: files
+    label: Fichier
+    multiple: false
+    width: 1/2
