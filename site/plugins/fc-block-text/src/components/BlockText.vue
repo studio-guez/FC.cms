@@ -5,6 +5,8 @@
          class="k-block-type-text-input"
          :value="content.text"
          :marks="textField.marks"
+         :nodes="textField.nodes"
+         :headings="textField.headings"
          @input="update({ text: $event })"
          />
       <div class="fc-blocks-controls" @click="open">
