@@ -6,7 +6,7 @@
       @open="open"
       @update="update"
    >
-      <div :class="['k-block', 'k-block-type-image', 'fc-image', `image-corner-${content.cornerradius}`]" @click="open" :style="{color: content.color}">
+      <div :class="['k-block', 'k-block-type-image', 'fc-image', `image-corner-${content.cornerradius}`]" @click="open" :style="{color: content.color || 'black'}">
          <img :src="image?.url" :alt="image?.alt">
       </div>
 </k-block-figure>
