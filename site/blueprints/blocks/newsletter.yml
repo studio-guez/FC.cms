@@ -1,0 +1,4 @@
+name: Newsletter
+icon: email
+fields:
+  color: fields/color
