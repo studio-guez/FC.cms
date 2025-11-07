@@ -13,27 +13,10 @@ fields:
     query: site.find('images')
   cornerRadius:
     label: Angles arrondis
-    type: toggles
-    grow: false
-    options:
-      - value: '10'
-        text: 10px
-        icon: corner-radius-10
-      - value: '20'
-        text: 20px
-        icon: corner-radius-20
-      - value: '30'
-        text: 30px
-        icon: corner-radius-30
-      - value: '40'
-        text: 40px 
-        icon: corner-radius-40
-      - value: '60'
-        text: 60px 
-        icon: corner-radius-60
-      - value: '80'
-        text: 80px 
-        icon: corner-radius-80
-      - value: '100'
-        text: 100px 
-        icon: corner-radius-100
+    type: range
+    icon: corner-radius-100
+    default: 10
+    step: 1
+    min: 0
+    max: 100
+    after: '%'

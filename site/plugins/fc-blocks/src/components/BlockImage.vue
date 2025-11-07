@@ -6,7 +6,7 @@
       @open="open"
       @update="update"
    >
-      <div :class="['k-block', 'k-block-type-image', 'fc-image', `image-corner-${content.cornerradius}`]" @click="open" :style="{color: content.color || 'black'}">
+      <div :class="['k-block', 'k-block-type-image', 'fc-image']" @click="open" :style="{color: content.color || 'black', borderRadius: `${content.cornerradius*5}px`}">
          <img :src="image?.url" :alt="image?.alt">
       </div>
 </k-block-figure>
@@ -16,6 +16,7 @@
 export default {
    computed: {
       image() {
+         console.log(this.content.image[0]?.image);
          return this.content.image[0]?.image;
       }
    }
@@ -34,6 +35,10 @@ export default {
       position: relative;
       border: 0.1rem solid;
       overflow: hidden;
+   }
+
+   .fc-image img {
+      width: 100%;
    }
 
    .fc-image::after {
