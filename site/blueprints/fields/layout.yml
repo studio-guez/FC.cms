@@ -5,4 +5,5 @@ fieldsets:
   - image
   - file
   - link
+  - hr
   - newsletter

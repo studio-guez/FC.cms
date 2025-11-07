@@ -1,0 +1,5 @@
+name: Separateur
+icon: divider
+wysiwyg: true
+fields:
+  color: fields/color
