@@ -33,6 +33,15 @@ return [
                     return Str::contains($path, 'pages/icons');
                 }
             ],
+            'images' => [
+                'icon' => 'image',
+                'label' => 'Images',
+                'link' => 'pages/images',
+                'current' => function(string $current): bool {
+                    $path = Kirby\CMS\App::instance()->path();
+                    return Str::contains($path, 'pages/images');
+                }
+            ],
             '-',
             'users',
             'system'
