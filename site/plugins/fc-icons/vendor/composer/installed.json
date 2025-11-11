@@ -1,0 +1,151 @@
+{
+    "packages": [
+        {
+            "name": "getkirby/composer-installer",
+            "version": "1.2.1",
+            "version_normalized": "1.2.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/getkirby/composer-installer.git",
+                "reference": "c98ece30bfba45be7ce457e1102d1b169d922f3d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/getkirby/composer-installer/zipball/c98ece30bfba45be7ce457e1102d1b169d922f3d",
+                "reference": "c98ece30bfba45be7ce457e1102d1b169d922f3d",
+                "shasum": ""
+            },
+            "require": {
+                "composer-plugin-api": "^1.0 || ^2.0"
+            },
+            "require-dev": {
+                "composer/composer": "^1.8 || ^2.0"
+            },
+            "time": "2020-12-28T12:54:39+00:00",
+            "type": "composer-plugin",
+            "extra": {
+                "class": "Kirby\\ComposerInstaller\\Plugin"
+            },
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "Kirby\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Kirby's custom Composer installer for the Kirby CMS and for Kirby plugins",
+            "homepage": "https://getkirby.com",
+            "support": {
+                "issues": "https://github.com/getkirby/composer-installer/issues",
+                "source": "https://github.com/getkirby/composer-installer/tree/1.2.1"
+            },
+            "funding": [
+                {
+                    "url": "https://getkirby.com/buy",
+                    "type": "custom"
+                }
+            ],
+            "install-path": "../getkirby/composer-installer"
+        },
+        {
+            "name": "mathiasreker/php-svg-optimizer",
+            "version": "7.3.0",
+            "version_normalized": "7.3.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/MathiasReker/php-svg-optimizer.git",
+                "reference": "7a6e78696dc8a77866e91f18ae5f2767dc379fb5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/MathiasReker/php-svg-optimizer/zipball/7a6e78696dc8a77866e91f18ae5f2767dc379fb5",
+                "reference": "7a6e78696dc8a77866e91f18ae5f2767dc379fb5",
+                "shasum": ""
+            },
+            "require": {
+                "ext-dom": "*",
+                "ext-libxml": "*",
+                "ext-mbstring": "*",
+                "php": "^8.3"
+            },
+            "require-dev": {
+                "brainbits/phpstan-rules": "^4.0.0",
+                "ergebnis/composer-normalize": "^2.48.2",
+                "ergebnis/phpstan-rules": "^2.12.0",
+                "friendsofphp/php-cs-fixer": "^3.89.2",
+                "hiperdk/phpstan-rules": "^1.0.0",
+                "infection/infection": "^0.31.9",
+                "kubawerlos/php-cs-fixer-custom-fixers": "^3.35.1",
+                "marc-mabe/php-enum-phpstan": "^3.0.0",
+                "odan/phpstan-rules": "^0.2.0",
+                "phpstan/extension-installer": "^1.4.3",
+                "phpstan/phpstan": "^2.1.31",
+                "phpstan/phpstan-deprecation-rules": "^2.0.3",
+                "phpstan/phpstan-mockery": "^2.0.0",
+                "phpstan/phpstan-phpunit": "^2.0.7",
+                "phpstan/phpstan-strict-rules": "^2.0.7",
+                "phpunit/php-code-coverage": "^12.4.0",
+                "phpunit/phpunit": "^12.4.2",
+                "povils/phpmnd": "^3.6.0",
+                "rector/rector": "^2.2.7",
+                "shipmonk/composer-dependency-analyser": "^1.8.3",
+                "shipmonk/phpstan-rules": "^4.2.1",
+                "slam/phpstan-extensions": "6.6.0",
+                "spaze/phpstan-disallowed-calls": "^4.7.0",
+                "squizlabs/php_codesniffer": "^4.0.0",
+                "symplify/phpstan-rules": "14.8.0",
+                "tomasvotruba/cognitive-complexity": "^1.0.0",
+                "tomasvotruba/type-coverage": "^2.0.2",
+                "voku/phpstan-rules": "^3.6.0"
+            },
+            "time": "2025-11-06T21:18:40+00:00",
+            "bin": [
+                "bin/svg-optimizer"
+            ],
+            "type": "library",
+            "extra": {
+                "phpstan": {
+                    "includes": [
+                        "extension.neon"
+                    ]
+                }
+            },
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "MathiasReker\\PhpSvgOptimizer\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mathias Reker",
+                    "role": "Senior Developer"
+                }
+            ],
+            "description": "php-svg-optimizer is a PHP library designed to optimize SVG files by applying various transformations and cleanup operations.",
+            "homepage": "https://github.com/mathiasreker/php-svg-optimizer",
+            "keywords": [
+                "clean",
+                "compress",
+                "minifier",
+                "minify",
+                "optimize",
+                "svg"
+            ],
+            "support": {
+                "issues": "https://github.com/MathiasReker/php-svg-optimizer/issues",
+                "source": "https://github.com/MathiasReker/php-svg-optimizer/tree/7.3.0"
+            },
+            "install-path": "../mathiasreker/php-svg-optimizer"
+        }
+    ],
+    "dev": true,
+    "dev-package-names": []
+}

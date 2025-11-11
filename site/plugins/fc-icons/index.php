@@ -1,84 +1,92 @@
 <?php
 
+@include_once __DIR__ . '/vendor/autoload.php';
+
 use Kirby\Cms\App as Kirby;
 use Kirby\Query\Query;
-
-require __DIR__ . '/src/models/icons.php';
-
-function getIconUrl($name) {
-   $icons_dir = kirby()->root('assets') . '/icons';
-   $icons = scandir($icons_dir);
-   foreach ($icons as $file) {
-      if ($file === "icon-$name.svg") {
-         return $icons_dir . '/' . $file;
-      }
-   }
-}
+use Kirby\Cms\File;
+use MathiasReker\PhpSvgOptimizer\Service\Facade\SvgOptimizerFacade;
 
 Kirby::plugin('maxesnee/fc-icons', [
+	'hooks' => [
+		// Optimize svg icons
+		'file.create:after' => function(File $file) {
+			if ($file->template() !== 'icon') return $file;
+
+			$svg = $file->read();
+			$tag = str_replace(".svg", "", $file->filename());
+
+			// Optimize
+			$svg = SvgOptimizerFacade::fromString($svg)
+			->withRules(
+				convertColorsToHex: true,
+				convertCssClassesToAttributes: true,
+				convertEmptyTagsToSelfClosing: true,
+				convertInlineStylesToAttributes: true,
+				flattenGroups: true,
+				minifySvgCoordinates: true,
+				minifyTransformations: true,
+				removeComments: true,
+				removeDefaultAttributes: true,
+				removeDeprecatedAttributes: true,
+				removeDoctype: true,
+				removeEmptyAttributes: true,
+				removeEnableBackgroundAttribute: true,
+				removeInkscapeFootprints: true,
+				removeInvisibleCharacters: true,
+				removeMetadata: true,
+				removeTitleAndDesc: true,
+				removeUnnecessaryWhitespace: true,
+				removeUnsafeElements: false,
+				removeUnusedMasks: true,
+				removeUnusedNamespaces: true,
+				removeWidthHeightAttributes: false,
+				sortAttributes: true
+			)->optimize()->getContent();
+
+			// Remove ids
+			$svg = preg_replace('/\s+id\s*=\s*(?:"[^"]*"|\'[^\']*\')/i', '', $svg);
+			
+			// Remove fills
+			$svg = preg_replace('/\s+fill\s*=\s*(?:"[^"]*"|\'[^\']*\')/i', '', $svg);
+
+			// Add global currentColor fill
+			$svg = preg_replace('/<svg\b([^>]*)>/i', '<svg$1 fill="currentColor">', $svg);
+
+			// Add class
+			$svg = preg_replace('/<svg\b([^>]*)>/i', '<svg$1 class="icon icon-' . $tag . '">', $svg);
+
+			$file->write($svg);
+
+			// Add tag field
+			$file = $file->update([
+				'tag' => '(icon: ' . $tag . ')'
+			]);
+
+			return $file;
+		},
+		'file.changeName:after' => function(File $newFile, File $oldFile) {
+			// Update tag field
+			$newFile = $newFile->update([
+				'tag' => '(icon: ' . str_replace(".svg", "", $newFile->filename()) . ')'
+			]);
+
+			return $newFile;
+		}
+	],
     // Add kirby-tags to insert icons in text fields
     'tags' => [
         'icon' => [
             'html' => function($tag) {
-                $icon_url = getIconUrl($tag->value);
-                if ($icon_url !== null) {
-                    return file_get_contents(getIconUrl($tag->value));
-                }
+					$file_name = $tag->value . '.svg';
+					$icon_file = kirby()->page('icons')->file($file_name);
+
+					if ($icon_file !== null) {
+						return $icon_file->read();
+					}
             }
         ]
     ],
     // Add custom icons for the panel (the icons are defined in index.js)
-    'icons' => [],
-    // Page model for the Icons page in the panel
-    'pageModels' => [
-        'icons' => 'IconsPage',
-    ],
-    // Blueprint for the Icons page in the panel
-    'blueprints' => [
-        'pages/icons' => __DIR__ . '/src/blueprints/pages/icons.yml',
-    ],
-    'sections' => [
-		'icons' => [
-			'props' => [
-				'label' => function ($label = 'Table') {
-					return $label;
-				},
-				'info' => function ($info = '') {
-					return $info;
-				},
-				'query' => function ($query = 'page.children') {
-					return $query;
-				},
-				'image' => function ($image = []) {
-					return $image;
-				}
-			],
-			'computed' => [
-				'items' => function() {
-					$query = new Query($this->query);
-					$result = $query->resolve(['page' => page($this->model()->id())])->toArray();
-					$output = [];
-					foreach ($result as $page) {
-						$item = [
-							'text' => $page['content']['tag'],
-							'info' => $this->info,
-							'image' => [
-								'back' => $this->image['back'],
-								'cover' => $this->image['cover'],
-								'src' => $page['url']
-							],
-							'buttons' => [
-								[
-									'icon' => 'copy'
-								]
-							]
-						];
-
-						$output[] = $item;
-					}
-					return $output;
-				}
-			]
-		]
-	]
+    'icons' => []
 ]);

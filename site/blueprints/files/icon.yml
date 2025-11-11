@@ -1,0 +1,9 @@
+title: Icon
+accept: image/svg+xml
+image:
+  cover: false
+  back: white
+fields:
+  tag:
+    type: text
+    disabled: true
