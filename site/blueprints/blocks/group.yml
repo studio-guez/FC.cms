@@ -1,0 +1,20 @@
+name: Groupe
+icon: bars
+preview: fields
+wysiwyg: true
+fields:
+  title: 
+    type: blocks
+    label: Titre
+    max: 1
+    fieldsets:
+      - text
+  content:
+    type: blocks
+    fieldsets:
+      - text
+      - image
+      - file
+      - link
+      - hr
+      - newsletter

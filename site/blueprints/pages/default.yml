@@ -1,16 +1,8 @@
-title: Home
+title: Default
 
 tabs:
   content:
     fields:
-      header_headline:
-        type: headline
-        label: En-tête
-      header_color: fields/color
-      header: fields/text
-      content_headline:
-        type: headline
-        label: Contenu de la page
       sections:
         type: layout
         layouts:
