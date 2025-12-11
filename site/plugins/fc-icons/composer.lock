@@ -71,7 +71,7 @@
                 "ext-dom": "*",
                 "ext-libxml": "*",
                 "ext-mbstring": "*",
-                "php": "^8.3"
+                "php": "^8.2"
             },
             "require-dev": {
                 "brainbits/phpstan-rules": "^4.0.0",
