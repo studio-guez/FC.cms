@@ -14,3 +14,8 @@ fieldsets:
   - hr
   - newsletter
   - subsection
+settings:
+  fields:
+    color: 
+      extends: fields/color
+      help: "Couleurs des barres de scrolls de la section (uniquement pour les sections en 2 colonnes)"
