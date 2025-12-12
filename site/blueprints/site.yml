@@ -1,32 +1,17 @@
 title: Home
 
 tabs:
-  content:
+  page:
     fields:
       header_headline:
         type: headline
-        label: En-tête
+        label: En-tête du site
       header_color: fields/color
       header: fields/text
       content_headline:
         type: headline
-        label: Contenu de la page
-      sections:
-        type: layout
-        layouts:
-          - "1/1"
-          - "1/2, 1/2"
-        selector:
-          size: huge
-          columns: 2
-        fieldsets:
-          - text
-          - image
-          - file
-          - link
-          - hr
-          - newsletter
-          - group
+        label: Home
+      sections: fields/layout
   children:
     label: Sous-pages
     sections:

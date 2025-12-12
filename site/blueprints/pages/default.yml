@@ -1,24 +1,9 @@
 title: Default
 
 tabs:
-  content:
+  page:
     fields:
-      sections:
-        type: layout
-        layouts:
-          - "1/1"
-          - "1/2, 1/2"
-        selector:
-          size: huge
-          columns: 2
-        fieldsets:
-          - text
-          - image
-          - file
-          - link
-          - hr
-          - newsletter
-          - subsection
+      sections: fields/layout
   children:
     label: Sous-pages
     sections:

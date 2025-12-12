@@ -1,5 +1,11 @@
-label: Contenu
-type: blocks
+label: Sections
+type: layout
+layouts:
+  - "1/1"
+  - "1/2, 1/2"
+selector:
+  size: huge
+  columns: 2
 fieldsets:
   - text
   - image
@@ -7,3 +13,4 @@ fieldsets:
   - link
   - hr
   - newsletter
+  - subsection
