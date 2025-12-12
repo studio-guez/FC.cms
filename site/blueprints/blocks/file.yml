@@ -9,3 +9,4 @@ fields:
     type: files
     label: Fichier
     multiple: false
+  mobile: fields/mobile

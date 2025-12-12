@@ -10,6 +10,7 @@
          @input="update({ text: $event })"
          />
       <div class="fc-blocks-controls" @click="open">
+         <k-button v-if="content.mobile" icon="mobile" />
          <k-color-frame :color="content.color" ratio="1/1"/>
       </div>
    </div>
@@ -28,7 +29,9 @@ export default {
 <style scoped lang="css">
    .fc-blocks-controls {
       position: absolute;
-      top: 1rem;
+      display: flex;
+      align-items: center;
+      top: 0.75rem;
       right: 0.75rem;
       cursor: pointer;
    }

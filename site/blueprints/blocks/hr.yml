@@ -3,3 +3,4 @@ icon: divider
 wysiwyg: true
 fields:
   color: fields/color
+  mobile: fields/mobile

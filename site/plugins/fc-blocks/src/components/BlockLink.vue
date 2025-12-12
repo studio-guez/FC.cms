@@ -2,6 +2,7 @@
    <div class="k-block k-block-type-link k-block-type-default" @click="open" @update="update">
       <k-block-title :fieldset="{ icon: 'url', name: this.content.label, label: this.content.label == '' ? 'Lien' : ''}"/>
       <div class="fc-blocks-controls" @click="open">
+         <k-button v-if="content.mobile" icon="mobile" />
          <k-color-frame :color="content.color" ratio="1/1"/>
       </div>
    </div>
@@ -10,6 +11,8 @@
 <style scoped lang="css">
    .fc-blocks-controls {
       position: absolute;
+      display: flex;
+      align-items: center;
       top: 0.5rem;
       right: 0.75rem;
       cursor: pointer;

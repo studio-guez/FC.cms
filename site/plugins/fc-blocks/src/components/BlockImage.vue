@@ -9,7 +9,11 @@
       <div :class="['k-block', 'k-block-type-image', 'fc-image']" @click="open" :style="{color: content.color || 'black', borderRadius: `${content.cornerradius*5}px`}">
          <img :src="image?.url" :alt="image?.alt">
       </div>
-</k-block-figure>
+
+      <div class="fc-blocks-controls" @click="open">
+         <k-button v-if="content.mobile" icon="mobile" />
+      </div>
+   </k-block-figure>
 </template>
 
 <script>
@@ -26,8 +30,8 @@ export default {
 <style lang="css">
    .fc-blocks-controls {
       position: absolute;
-      top: 1rem;
-      right: 1rem;
+      top: 0.5rem;
+      right: 0.25rem;
       cursor: pointer;
    }
 

@@ -5,6 +5,4 @@ preview: text
 fields:
   color: fields/color
   text: fields/text
-  mobile:
-    type: toggle
-    label: Affichage sur mobile uniquement
+  mobile: fields/mobile

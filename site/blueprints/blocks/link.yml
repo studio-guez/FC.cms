@@ -9,3 +9,4 @@ fields:
   url:
     type: url
     label: URL
+  mobile: fields/mobile

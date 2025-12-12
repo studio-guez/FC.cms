@@ -20,3 +20,4 @@ fields:
     min: 0
     max: 100
     after: '%'
+  mobile: fields/mobile
