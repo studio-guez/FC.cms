@@ -1,0 +1,15 @@
+title: Video Poster
+accept: image/jpeg
+image:
+  cover: true
+  ratio: 16/9
+options:
+  changeName: false
+  delete: false
+  replace: false
+  update: false
+fields:
+  title:
+    type: text
+    label: Title
+    disabled: true

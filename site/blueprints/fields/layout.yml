@@ -9,6 +9,7 @@ selector:
 fieldsets:
   - text
   - image
+  - video
   - file
   - link
   - hr

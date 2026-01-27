@@ -1,0 +1,10 @@
+title: Video
+accept: video/mp4
+image:
+  query: file.poster
+  cover: true
+  ratio: 16/9
+fields:
+  title:
+    type: text
+    label: Title

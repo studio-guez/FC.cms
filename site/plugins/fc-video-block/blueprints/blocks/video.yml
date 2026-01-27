@@ -1,0 +1,21 @@
+name: Video
+icon: video
+wysiwyg: true
+fields:
+  title:
+    type: text
+    label: Title
+  video:
+    label: Video
+    type: files
+    multiple: false
+    accept: video/mp4
+    query: site.files.filterBy('extension', 'mp4')
+    image:
+      query: file.poster
+      cover: true
+      ratio: 16/9
+    uploads:
+      template: video
+    layout: cards
+    size: huge
