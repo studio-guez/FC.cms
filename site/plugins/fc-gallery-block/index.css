@@ -1,37 +1,36 @@
 .fc-gallery-block-panel {
   display: grid;
-  gap: var(--spacing-3);
   padding: var(--spacing-3);
 }
 
 .fc-gallery-block-panel__title {
   font-size: var(--text-h3);
   font-weight: normal;
+  margin-bottom: var(--spacing-3)
 }
 
 .fc-gallery-block-panel__strip {
   display: flex;
   gap: var(--spacing-3);
   overflow-x: auto;
-  padding-bottom: var(--spacing-2);
+  padding-bottom: var(--spacing-3);
   scroll-snap-type: x proximity;
 }
 
 .fc-gallery-block-panel__item {
   flex: 0 0 auto;
-  width: 9rem;
-  height: 6.5rem;
+  height: 9rem;
   border-radius: var(--spacing-2);
   background: var(--color-gray-200);
   overflow: hidden;
-  display: grid;
-  place-items: center;
+  display: flex;
+  align-items: center;
   scroll-snap-align: start;
 }
 
 .fc-gallery-block-panel__item img {
-  max-width: 100%;
-  max-height: 100%;
+  height: 100%;
+  width: auto;
   object-fit: contain;
 }
 

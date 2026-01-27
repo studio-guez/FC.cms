@@ -21,8 +21,8 @@ panel.plugin("maxesnee/fc-video-block", {
           empty-text="Select a video"
           @open="open"
         >
+          <div v-if="title" class="fc-video-block-panel__title">{{ title }}</div>
           <div class="fc-video-block-panel" @click="open">
-            <div v-if="title" class="fc-video-block-panel__title">{{ title }}</div>
             <div
               class="fc-video-block-panel__media"
               :style="posterUrl ? { backgroundImage: 'url(' + posterUrl + ')' } : null"
@@ -31,8 +31,8 @@ panel.plugin("maxesnee/fc-video-block", {
                 <k-icon type="video" />
               </div>
             </div>
-            <div v-if="video" class="fc-video-block-panel__meta">{{ video.filename }}</div>
           </div>
+          <div v-if="video" class="fc-video-block-panel__meta">{{ video.filename }}</div>
         </k-block-figure>
       `,
     },

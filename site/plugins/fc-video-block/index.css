@@ -1,5 +1,6 @@
 .fc-video-block-panel {
   display: grid;
+  grid-template-columns: repeat(auto-fill,minmax(18rem,1fr));
   gap: 0.35rem;
 }
 
@@ -12,6 +13,7 @@
   background-position: center;
   border-radius: 0.5rem;
   overflow: hidden;
+  margin-bottom: var(--spacing-3)
 }
 
 .fc-video-block-panel__play {
