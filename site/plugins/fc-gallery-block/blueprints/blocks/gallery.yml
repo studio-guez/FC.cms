@@ -1,0 +1,19 @@
+name: Galerie
+icon: images
+wysiwyg: true
+fields:
+  title:
+    type: text
+    label: Title
+  images:
+    label: Images
+    type: files
+    multiple: true
+    accept: image/*
+    query: site.images
+    uploads:
+      template: gallery-image
+    image:
+      cover: false
+    layout: cards
+    size: small
