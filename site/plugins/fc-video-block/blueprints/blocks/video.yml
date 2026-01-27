@@ -5,6 +5,7 @@ fields:
   title:
     type: text
     label: Title
+  color: fields/color
   video:
     label: Video
     type: files
@@ -19,3 +20,4 @@ fields:
       template: video
     layout: cards
     size: huge
+  mobile: fields/mobile

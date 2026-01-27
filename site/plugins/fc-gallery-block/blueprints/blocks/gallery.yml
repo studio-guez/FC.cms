@@ -5,6 +5,7 @@ fields:
   title:
     type: text
     label: Title
+  color: fields/color
   images:
     label: Images
     type: files
@@ -17,3 +18,4 @@ fields:
       cover: false
     layout: cards
     size: small
+  mobile: fields/mobile
