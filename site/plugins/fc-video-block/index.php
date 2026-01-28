@@ -3,7 +3,6 @@
 use Kirby\Cms\App as Kirby;
 use Kirby\Cms\File;
 use Kirby\Toolkit\Str;
-use Throwable;
 
 const FC_VIDEO_POSTER_EXTENSION = 'jpg';
 
@@ -20,7 +19,7 @@ function fcVideoBlockGeneratePoster(File $file): void {
     if ($poster) {
         try {
             $poster->delete();
-        } catch (Throwable) {
+        } catch (\Throwable $e) {
             return;
         }
     }
@@ -58,7 +57,7 @@ function fcVideoBlockGeneratePoster(File $file): void {
         $video = $ffmpegInstance->open($file->root());
         $frame = $video->frame(\FFMpeg\Coordinate\TimeCode::fromString('00:00:00.000'));
         $frame->save($tempFile);
-    } catch (Throwable) {
+    } catch (\Throwable $e) {
         @unlink($tempFile);
         return;
     }
