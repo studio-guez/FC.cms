@@ -1,1 +1,107 @@
-(function(){"use strict";function n(o,e,t,v,_,r,p,u){var i=typeof o=="function"?o.options:o;return e&&(i.render=e,i.staticRenderFns=t,i._compiled=!0),i._scopeId="data-v-"+r,{exports:o,options:i}}const l={computed:{video(){return this.content.video&&this.content.video.length?this.content.video[0]:null},posterUrl(){return this.video&&this.video.image?this.video.image.url:null},title(){return this.content.title||""}}};var c=function(){var e=this,t=e._self._c;return t("k-block-figure",{attrs:{"is-empty":!e.video,"empty-icon":"video","empty-text":"Select a video"},on:{open:e.open}},[e.title?t("div",{staticClass:"fc-video-block-panel__title"},[e._v(e._s(e.title))]):e._e(),t("div",{staticClass:"fc-video-block-panel",on:{click:e.open}},[t("div",{staticClass:"fc-video-block-panel__media",style:e.posterUrl?{backgroundImage:"url("+e.posterUrl+")"}:null},[t("div",{staticClass:"fc-video-block-panel__play"},[t("k-icon",{attrs:{type:"video"}})],1)]),t("div",{staticClass:"fc-blocks-controls",on:{click:e.open}},[e.content.mobile?t("k-button",{attrs:{icon:"mobile"}}):e._e(),t("k-color-frame",{attrs:{color:e.content.color,ratio:"1/1"}})],1)]),e.video?t("div",{staticClass:"fc-video-block-panel__meta"},[e._v(e._s(e.video.filename))]):e._e()])},s=[],a=n(l,c,s,!1,null,"eb178d63");const d=a.exports;panel.plugin("maxesnee/fc-video-block",{blocks:{video:d}})})();
+(function () {
+  "use strict";
+
+  const BlockVideo = {
+    _scopeId: "data-v-eb178d63",
+    computed: {
+      video() {
+        return this.content.video && this.content.video.length
+          ? this.content.video[0]
+          : null;
+      },
+      title() {
+        return this.content.title || "";
+      },
+    },
+    render(h) {
+      const children = [];
+
+      if (this.title) {
+        children.push(
+          h("div", { staticClass: "fc-video-block-panel__title" }, [this.title])
+        );
+      }
+
+      const panelChildren = [];
+
+      if (this.video) {
+        const sourceAttrs = { src: this.video.url };
+        if (this.video.mime) {
+          sourceAttrs.type = this.video.mime;
+        }
+
+        panelChildren.push(
+          h(
+            "video",
+            {
+              staticClass: "fc-video-block-panel__player",
+              attrs: {
+                controls: true,
+                preload: "metadata",
+                playsinline: true,
+              },
+              on: {
+                click(event) {
+                  event.stopPropagation();
+                },
+              },
+            },
+            [h("source", { attrs: sourceAttrs })]
+          )
+        );
+      }
+
+      panelChildren.push(
+        h(
+          "div",
+          {
+            staticClass: "fc-blocks-controls",
+            on: { click: this.open },
+          },
+          [
+            this.content.mobile
+              ? h("k-button", { attrs: { icon: "mobile" } })
+              : null,
+            h("k-color-frame", {
+              attrs: { color: this.content.color, ratio: "1/1" },
+            }),
+          ].filter(Boolean)
+        )
+      );
+
+      children.push(
+        h(
+          "div",
+          {
+            staticClass: "fc-video-block-panel",
+            on: { click: this.open },
+          },
+          panelChildren
+        )
+      );
+
+      if (this.video) {
+        children.push(
+          h("div", { staticClass: "fc-video-block-panel__meta" }, [
+            this.video.filename,
+          ])
+        );
+      }
+
+      return h(
+        "k-block-figure",
+        {
+          attrs: {
+            "is-empty": !this.video,
+            "empty-icon": "video",
+            "empty-text": "Select a video",
+          },
+          on: { open: this.open },
+        },
+        children
+      );
+    },
+  };
+
+  panel.plugin("maxesnee/fc-video-block", { blocks: { video: BlockVideo } });
+})();

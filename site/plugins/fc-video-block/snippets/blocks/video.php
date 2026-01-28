@@ -9,8 +9,6 @@ if ($video === null) {
 }
 
 $title = $block->title()->value();
-$poster = $video->poster();
-$posterUrl = $poster?->url();
 ?>
 <figure class="fc-video-block">
   <?php if ($title): ?>
@@ -21,7 +19,6 @@ $posterUrl = $poster?->url();
     controls
     preload="metadata"
     playsinline
-    <?php if ($posterUrl): ?>poster="<?= esc($posterUrl) ?>"<?php endif ?>
   >
     <source src="<?= esc($video->url()) ?>" type="<?= esc($video->mime()) ?>">
   </video>

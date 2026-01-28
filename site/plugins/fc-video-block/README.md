@@ -1,13 +1,10 @@
 # FC Video Block
 
 Standalone Kirby CMS block plugin that adds a video block with a title and a
-single MP4 upload. When a video is uploaded, a poster image is generated from
-its first frame (same filename, `jpg` extension) and used as the panel cover.
+single MP4 upload.
 
 ## Requirements
 - Kirby 5
-- `php-ffmpeg/php-ffmpeg`
-- `ffmpeg` + `ffprobe` binaries bundled in `bin/`
 
 ## Installation
 Place the plugin in `site/plugins/fc-video-block`.

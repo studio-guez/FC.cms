@@ -7,19 +7,21 @@
   >
   <div v-if="title" class="fc-video-block-panel__title">{{ title }}</div>
   <div class="fc-video-block-panel" @click="open">
-    <div
-    class="fc-video-block-panel__media"
-    :style="posterUrl ? { backgroundImage: 'url(' + posterUrl + ')' } : null"
+    <video
+      v-if="video"
+      class="fc-video-block-panel__player"
+      controls
+      preload="metadata"
+      playsinline
+      @click.stop
     >
-    <div class="fc-video-block-panel__play">
-      <k-icon type="video" />
+      <source :src="video.url" :type="video.mime || ''" />
+    </video>
+    <div class="fc-blocks-controls" @click="open">
+      <k-button v-if="content.mobile" icon="mobile" />
+      <k-color-frame :color="content.color" ratio="1/1" />
     </div>
   </div>
-  <div class="fc-blocks-controls" @click="open">
-    <k-button v-if="content.mobile" icon="mobile" />
-    <k-color-frame :color="content.color" ratio="1/1" />
-  </div>
-</div>
 <div v-if="video" class="fc-video-block-panel__meta">{{ video.filename }}</div>
 </k-block-figure>
 </template>
@@ -31,9 +33,6 @@ export default {
       return this.content.video && this.content.video.length
       ? this.content.video[0]
       : null;
-    },
-    posterUrl() {
-      return this.video && this.video.image ? this.video.image.url : null;
     },
     title() {
       return this.content.title || "";
@@ -50,30 +49,14 @@ export default {
   gap: 0.35rem;
 }
 
-.fc-video-block-panel__media {
-  position: relative;
+.fc-video-block-panel__player {
+  display: block;
   width: 100%;
-  padding-top: 56.25%;
+  aspect-ratio: 16 / 9;
   background-color: var(--color-gray-200);
-  background-size: cover;
-  background-position: center;
   border-radius: 0.5rem;
+  margin-bottom: var(--spacing-3);
   overflow: hidden;
-  margin-bottom: var(--spacing-3)
-}
-
-.fc-video-block-panel__play {
-  position: absolute;
-  left: var(--spacing-3);
-  bottom: var(--spacing-3);
-  z-index: 1;
-  display: grid;
-  place-items: center;
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: 999px;
-  background: rgba(0, 0, 0, 0.65);
-  color: #fff;
 }
 
 .fc-video-block-panel__title {
