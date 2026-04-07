@@ -12,5 +12,6 @@ marks:
   - email
 nodes:
   - heading
+  - small
   - bulletList
   - orderedList
