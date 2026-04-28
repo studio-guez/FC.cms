@@ -18,10 +18,19 @@ return [
         'menu' => [
             'site' => [
                 'current' => function(string $current): bool {
-                    $links = ['pages/icons'];
+                    $links = ['pages/journal', 'pages/icons', 'pages/images'];
                     $path  = Kirby\Cms\App::instance()->path();
 
                     return $current === 'site' && A::every($links, fn($link) => Str::contains($path, $link) === false);
+                }
+            ],
+            'journal' => [
+                'icon' => 'draft',
+                'label' => 'Journal',
+                'link' => 'pages/journal',
+                'current' => function(string $current): bool {
+                    $path = Kirby\CMS\App::instance()->path();
+                    return Str::contains($path, 'pages/journal');
                 }
             ],
             'icons' => [

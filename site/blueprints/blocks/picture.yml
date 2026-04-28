@@ -1,0 +1,10 @@
+name: Image
+icon: image
+wysiwyg: true
+preview: fields
+fields:
+  image:
+    label: Image
+    type: files
+    multiple: false
+    layout: cards
