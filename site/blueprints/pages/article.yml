@@ -7,7 +7,7 @@ columns:
       text:
         type: blocks
         fieldsets:
-          - text
+          - text-simple
           - picture
   sidebar:
     width: 1/3

@@ -1,0 +1,6 @@
+name: Texte
+icon: text
+wysiwyg: true
+preview: text
+fields:
+  text: fields/text
