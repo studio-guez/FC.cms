@@ -8,3 +8,9 @@ fields:
     type: files
     multiple: false
     layout: cards
+    size: huge
+    width: 1/2
+  caption:
+    label: Légende
+    type: text
+    width: 1/2
