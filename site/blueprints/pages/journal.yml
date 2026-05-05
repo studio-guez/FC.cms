@@ -3,3 +3,4 @@ title: Journal
 sections:
   pages:
     template: article
+    sortBy: published desc
