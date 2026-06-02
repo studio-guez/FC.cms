@@ -1,0 +1,9 @@
+title: Theme
+
+create:
+  title:
+    label: Thématique
+  status: listed
+
+fields:
+  color: fields/color

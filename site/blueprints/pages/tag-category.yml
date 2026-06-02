@@ -1,0 +1,9 @@
+title: Category
+
+create:
+  title:
+    label: Catégorie
+  status: listed
+
+fields:
+  color: fields/color

@@ -28,8 +28,13 @@ columns:
         type: files
         layout: cards
         multiple: false
-      tags:
+      categories:
         type: tags
-        label: Tags
+        label: Catégories
         options: query
-        query: page.siblings.pluck("tags", ",", true)
+        query: page('journal/tags').children.template('tag-category')
+      themes:
+        type: tags
+        label: Thématiques
+        options: query
+        query: page('journal/tags').children.template('tag-theme')

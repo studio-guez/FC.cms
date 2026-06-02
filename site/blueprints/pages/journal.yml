@@ -1,6 +1,21 @@
 title: Journal
 
-sections:
-  pages:
-    template: article
-    sortBy: published desc
+tabs:
+  articles:
+    sections:
+      pages:
+        label: Articles
+        template: article
+        sortBy: published desc
+  tags:
+    sections:
+      categories:
+        label: Catégories
+        type: pages
+        template: tag-category
+        parent: page('journal/tags')
+      themes:
+        label: Thématiques
+        type: pages
+        template: tag-theme
+        parent: page('journal/tags')
