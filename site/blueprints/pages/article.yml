@@ -9,6 +9,14 @@ columns:
         fieldsets:
           - text-simple
           - picture
+          - type: video
+            extends: blocks/video
+            fields: 
+              title: false
+              mobile: false
+              caption:
+                label: Légende
+                type: text
   sidebar:
     width: 1/3
     fields:
