@@ -3,6 +3,11 @@ title: Journal
 tabs:
   articles:
     sections:
+      fields:
+        fields:
+          description: 
+            extends: fields/text
+            label: Description
       pages:
         label: Articles
         template: article
