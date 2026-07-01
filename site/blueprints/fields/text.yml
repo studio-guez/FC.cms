@@ -9,6 +9,7 @@ headings:
 placeholder: field.blocks.text.placeholder
 marks:
   - underline
+  - italic
   - link
   - email
 nodes:
