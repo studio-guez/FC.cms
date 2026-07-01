@@ -1,6 +1,6 @@
 title: Article
 options:
-  preview: "{{ kirby.option('frontendUrl') }}/journal/articles#{{ page.slug }}"
+  preview: "{{ kirby.option('frontendUrl') }}/journal/articles?preview=1#{{ page.slug }}"
 
 columns:
   main:

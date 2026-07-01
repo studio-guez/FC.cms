@@ -1,6 +1,6 @@
 title: Default
 options:
-  preview: "{{ kirby.option('frontendUrl') }}/{{ page.uri }}"
+  preview: "{{ kirby.option('frontendUrl') }}/{{ page.uri }}?preview=1"
 
 tabs:
   page:
