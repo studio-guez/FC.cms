@@ -1,4 +1,6 @@
 title: Home
+options:
+  preview: "{{ kirby.option('frontendUrl') }}/{{ page.uri }}"
 
 tabs:
   page:

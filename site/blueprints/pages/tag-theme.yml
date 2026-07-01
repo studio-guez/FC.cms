@@ -1,4 +1,6 @@
 title: Theme
+options:
+  preview: false 
 
 create:
   title:

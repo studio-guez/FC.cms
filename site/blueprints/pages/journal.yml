@@ -1,4 +1,6 @@
 title: Journal
+options:
+  preview: "{{ kirby.option('frontendUrl') }}/{{ page.uri }}"
 
 tabs:
   articles:

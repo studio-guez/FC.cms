@@ -1,4 +1,6 @@
 title: Tags
+options:
+  preview: false 
 
 sections:
   categories:
