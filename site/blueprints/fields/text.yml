@@ -5,6 +5,7 @@ headings:
   - 3
   - 4
   - 5
+  - 6
 placeholder: field.blocks.text.placeholder
 marks:
   - underline
