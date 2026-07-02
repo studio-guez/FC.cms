@@ -16,6 +16,7 @@ fieldsets:
   - hr
   - newsletter
   - subsection
+  - banner
 settings:
   fields:
     color: 

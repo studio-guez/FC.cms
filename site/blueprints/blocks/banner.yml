@@ -1,0 +1,10 @@
+name: Bandeau défilant
+icon: megaphone
+wysiwyg: true
+preview: fields
+fields:
+  color: fields/color
+  icons: 
+    type: text
+    label: Icônes
+  text: fields/text
