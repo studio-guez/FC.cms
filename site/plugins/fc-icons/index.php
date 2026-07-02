@@ -56,6 +56,38 @@ Kirby::plugin('maxesnee/fc-icons', [
 			// Add class
 			$svg = preg_replace('/<svg\b([^>]*)>/i', '<svg$1 class="icon icon-' . $tag . '">', $svg);
 
+			// Add width and height from the viewBox when missing.
+			$svg = preg_replace_callback('/<svg\b[^>]*>/i', function ($matches) {
+				$svgTag = $matches[0];
+
+				$hasWidth = preg_match('/\swidth\s*=\s*(?:"[^"]*"|\'[^\']*\')/i', $svgTag) === 1;
+				$hasHeight = preg_match('/\sheight\s*=\s*(?:"[^"]*"|\'[^\']*\')/i', $svgTag) === 1;
+
+				if ($hasWidth && $hasHeight) {
+					return $svgTag;
+				}
+
+				if (preg_match('/\sviewBox\s*=\s*(["\'])([^"\']+)\1/i', $svgTag, $viewBoxMatch) !== 1) {
+					return $svgTag;
+				}
+
+				$viewBox = preg_split('/[\s,]+/', trim($viewBoxMatch[2]));
+				if ($viewBox === false || count($viewBox) < 4) {
+					return $svgTag;
+				}
+
+				$dimensions = '';
+				if ($hasWidth === false) {
+					$dimensions .= ' width="' . $viewBox[2] . '"';
+				}
+
+				if ($hasHeight === false) {
+					$dimensions .= ' height="' . $viewBox[3] . '"';
+				}
+
+				return rtrim($svgTag, '>') . $dimensions . '>';
+			}, $svg, 1) ?? $svg;
+
 			$file->write($svg);
 
 			// Add tag field
