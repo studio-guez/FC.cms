@@ -6,6 +6,10 @@ use Kirby\Toolkit\Str;
 header("Access-Control-Allow-Origin: *");
 
 return [
+    'url' => [
+        'https://lesfantastiquescommuns.cc',
+        'http://localhost:8000'
+    ],
     'frontendUrl' => 'https://lesfantastiquescommuns.cc',
     'api' => [
         'basicAuth' => true,

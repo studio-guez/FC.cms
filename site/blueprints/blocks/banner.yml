@@ -8,3 +8,6 @@ fields:
     type: text
     label: Icônes
   text: fields/text
+  link:
+    type: link
+    label: Lien
