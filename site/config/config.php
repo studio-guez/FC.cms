@@ -7,7 +7,7 @@ header("Access-Control-Allow-Origin: *");
 
 return [
     'url' => [
-        'https://lesfantastiquescommuns.cc',
+        'https://cms.lesfantastiquescommuns.cc',
         'http://localhost:8000'
     ],
     'frontendUrl' => 'https://lesfantastiquescommuns.cc',
