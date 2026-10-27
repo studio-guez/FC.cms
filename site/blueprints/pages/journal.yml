@@ -10,6 +10,9 @@ tabs:
           description: 
             extends: fields/text
             label: Description
+          link_label:
+            type: text
+            label: Lien pour retourner aux articles
       pages:
         label: Articles
         template: article
