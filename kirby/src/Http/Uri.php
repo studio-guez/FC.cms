@@ -283,7 +283,11 @@ class Uri implements Stringable
 	{
 		if ($this->isAbsolute() === true) {
 			$host = Idn::decode($this->host);
-			$this->setHost($host);
+
+			// preserve the original host if the conversion failed
+			if ($host !== false) {
+				$this->setHost($host);
+			}
 		}
 		return $this;
 	}
@@ -301,6 +305,27 @@ class Uri implements Stringable
 		$url ??= (new Environment())->baseUrl();
 
 		return new static($url, $props);
+	}
+
+	/**
+	 * Inherit query, params and fragment from a parent Uri
+	 * @since 5.2.0
+	 * @return $this
+	 */
+	public function inherit(Uri|string $parent): static
+	{
+		if (is_string($parent) === true) {
+			$parent = new static($parent);
+		}
+
+		$this->query->merge($parent->query());
+		$this->params->merge($parent->params());
+
+		if ($fragment = $parent->fragment()) {
+			$this->setFragment($fragment);
+		}
+
+		return $this;
 	}
 
 	/**
@@ -506,7 +531,11 @@ class Uri implements Stringable
 	{
 		if ($this->isAbsolute() === true) {
 			$host = Idn::encode($this->host);
-			$this->setHost($host);
+
+			// preserve the original host if the conversion failed
+			if ($host !== false) {
+				$this->setHost($host);
+			}
 		}
 		return $this;
 	}

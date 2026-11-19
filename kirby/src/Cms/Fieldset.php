@@ -54,7 +54,7 @@ class Fieldset extends Item
 		$this->disabled    = $params['disabled'] ?? false;
 		$this->editable    = $params['editable'] ?? true;
 		$this->icon        = $params['icon'] ?? null;
-		$params['title'] ??= $params['name'] ?? Str::ucfirst($this->type);
+		$params['title'] ??= $params['name'] ?? Str::label($this->type);
 		$this->name        = $this->createName($params['title']);
 		$this->label       = $this->createLabel($params['label'] ?? null);
 		$this->preview     = $params['preview'] ?? null;
@@ -77,7 +77,6 @@ class Fieldset extends Item
 	protected function createFields(array $fields = []): array
 	{
 		$fields = Blueprint::fieldsProps($fields);
-		$fields = $this->form($fields)->fields()->toProps();
 
 		// collect all fields
 		$this->fields = [...$this->fields, ...$fields];
@@ -119,7 +118,7 @@ class Fieldset extends Item
 			$tab = Blueprint::extend($tab);
 
 			$tab['fields']  = $this->createFields($tab['fields'] ?? []);
-			$tab['label'] ??= Str::ucfirst($name);
+			$tab['label'] ??= Str::label($name);
 			$tab['label']   = $this->createLabel($tab['label']);
 			$tab['name']    = $name;
 
@@ -147,6 +146,12 @@ class Fieldset extends Item
 		return true;
 	}
 
+	/**
+	 * Returns the props of all fields as defined in the blueprint,
+	 * so that forms resolve options for their own values
+	 *
+	 * @return array<string|int, array>
+	 */
 	public function fields(): array
 	{
 		return $this->fields;
@@ -212,6 +217,15 @@ class Fieldset extends Item
 
 	public function toArray(): array
 	{
+		// render the fields of each tab for the Panel
+		$tabs = array_map(
+			fn (array $tab): array => [
+				...$tab,
+				'fields' => $this->form($tab['fields'])->fields()->toProps()
+			],
+			$this->tabs()
+		);
+
 		return [
 			'disabled'  => $this->disabled(),
 			'editable'  => $this->editable(),
@@ -219,7 +233,7 @@ class Fieldset extends Item
 			'label'     => $this->label(),
 			'name'      => $this->name(),
 			'preview'   => $this->preview(),
-			'tabs'      => $this->tabs(),
+			'tabs'      => $tabs,
 			'translate' => $this->translate(),
 			'type'      => $this->type(),
 			'unset'     => $this->unset(),

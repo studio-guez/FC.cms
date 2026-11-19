@@ -167,7 +167,7 @@ class Collection extends BaseCollection
 		$groups = new self(parent: $this->parent());
 
 		if (is_string($field) === true) {
-			foreach ($this->data as $key => $item) {
+			foreach ($this as $key => $item) {
 				$value = $this->getAttribute($item, $field);
 
 				// make sure that there's always a proper value to group by
@@ -250,11 +250,12 @@ class Collection extends BaseCollection
 
 			if ($key instanceof BaseCollection) {
 				$collection = $collection->not(...$key->keys());
-			} elseif (is_object($key) === true) {
-				$key = $key->id();
+				continue;
 			}
 
-			unset($collection->{$key});
+			// `unset($collection->{$key})` would remove a property
+			// instead of the element for keys like `data`
+			$collection->remove($key);
 		}
 
 		return $collection;

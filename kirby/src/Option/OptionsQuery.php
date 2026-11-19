@@ -10,11 +10,13 @@ use Kirby\Cms\StructureObject;
 use Kirby\Cms\User;
 use Kirby\Content\Field;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Toolkit\A;
 use Kirby\Toolkit\Collection;
+use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Obj;
 
 /**
- * Options derrived from running a query against
+ * Options derived from running a query against
  * pages, files, users or structures to create
  * options out of them.
  *
@@ -38,11 +40,14 @@ class OptionsQuery extends OptionsProvider
 
 	protected function collection(array $array): Collection
 	{
+		$isAssociative = A::isAssociative($array);
+
 		foreach ($array as $key => $value) {
 			if (is_scalar($value) === true) {
 				$array[$key] = new Obj([
-					'key'   => new Field(null, 'key', $key),
-					'value' => new Field(null, 'value', $value),
+					'key'          => new Field(null, 'key', $key),
+					'value'        => new Field(null, 'value', $value),
+					'hasStringKey' => $isAssociative,
 				]);
 			}
 		}
@@ -66,12 +71,33 @@ class OptionsQuery extends OptionsProvider
 	}
 
 	/**
+	 * Whether the current user may list the item
+	 * if it is a model with permissions
+	 * @since 5.6.4
+	 */
+	protected function isListable(array|object $item): bool
+	{
+		return match (true) {
+			$item instanceof File,
+			$item instanceof Page,
+			$item instanceof User => $item->isListable(),
+			default               => true
+		};
+	}
+
+	/**
 	 * Returns defaults for the following based on item type:
 	 * [query entry alias, default text query, default value query]
 	 */
 	protected function itemToDefaults(array|object $item): array
 	{
 		return match (true) {
+			$item instanceof Obj && $item->hasStringKey === true => [
+				'arrayItem',
+				'{{ item.value }}',
+				'{{ item.key }}'
+			],
+
 			is_array($item),
 			$item instanceof Obj => [
 				'arrayItem',
@@ -139,12 +165,17 @@ class OptionsQuery extends OptionsProvider
 	 * @param bool $safeMode Whether to escape special HTML characters in
 	 *                       the option text for safe output in the Panel;
 	 *                       only set to `false` if the text is later escaped!
+	 * @param array $keep Values of models the current user must not list
+	 *                    that are kept as placeholders (e.g. stored values)
 	 */
-	public function resolve(ModelWithContent $model, bool $safeMode = true): Options
-	{
+	public function resolve(
+		ModelWithContent $model,
+		bool $safeMode = true,
+		array $keep = []
+	): Options {
 		// use cached options if present
 		// @codeCoverageIgnoreStart
-		if ($this->options !== null) {
+		if ($this->options !== null && $keep === []) {
 			return $this->options;
 		}
 		// @codeCoverageIgnoreEnd
@@ -171,13 +202,25 @@ class OptionsQuery extends OptionsProvider
 		}
 
 		// create options array
-		$options = $result->toArray(function ($item) use ($model, $safeMode) {
+		$options = $result->toArray(function ($item) use ($model, $safeMode, $keep) {
 			// get defaults based on item type
 			[$alias, $text, $value] = $this->itemToDefaults($item);
 			$data = ['item' => $item, $alias => $item];
 
 			// value is always a raw string
 			$value = $model->toString($this->value ?? $value, $data);
+
+			// never disclose models the current user must not list,
+			// only keep the requested values as placeholders
+			if ($this->isListable($item) === false) {
+				return match (in_array($value, $keep)) {
+					true  => [
+						'text'  => '[' . I18n::translate('unknown', 'unknown') . ']',
+						'value' => $value
+					],
+					false => null
+				};
+			}
 
 			// text is only a raw string when using {< >}
 			// or when the safe mode is explicitly disabled (select field)
@@ -191,6 +234,15 @@ class OptionsQuery extends OptionsProvider
 			return compact('text', 'value', 'icon', 'info');
 		});
 
-		return $this->options = Options::factory($options);
+		// ensure not to resolve Kirby queries again
+		// to prevent double-resolution of user-controlled content
+		$options = Options::factory(array_filter($options), resolve: false);
+
+		// only cache options without placeholders
+		if ($keep === []) {
+			$this->options = $options;
+		}
+
+		return $options;
 	}
 }

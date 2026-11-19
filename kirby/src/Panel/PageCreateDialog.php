@@ -273,18 +273,17 @@ class PageCreateDialog
 		}
 
 		$props = [
-			'slug'     => '__new__',
+			'slug'     => $this->slug ?: '__new__',
 			'template' => $this->template,
 			'model'    => $this->template,
-			'parent'   => $this->parent instanceof Page ? $this->parent : null
+			'parent'   => $this->parent instanceof Page ? $this->parent : null,
+			'content'  => ['title' => $this->title],
 		];
 
 		// make sure that a UUID gets generated
 		// and added to content right away
 		if (Uuids::enabled() === true) {
-			$props['content'] = [
-				'uuid' => $this->uuid = Uuid::generate()
-			];
+			$props['content']['uuid'] = $this->uuid = Uuid::generate();
 		}
 
 		$this->model = Page::factory($props);
@@ -310,12 +309,14 @@ class PageCreateDialog
 		// to resolve the template strings
 		$page = $this->model()->clone(['content' => $input]);
 
-		if (is_string($title)) {
-			$input['title'] = $page->toSafeString($title);
+		// values get stored as content, so they must not be
+		// HTML-escaped here; escaping happens on output
+		if (is_string($title) === true) {
+			$input['title'] = $page->toString($title);
 		}
 
-		if (is_string($slug)) {
-			$input['slug'] = $page->toSafeString($slug);
+		if (is_string($slug) === true) {
+			$input['slug'] = $page->toString($slug);
 		}
 
 		return $input;
