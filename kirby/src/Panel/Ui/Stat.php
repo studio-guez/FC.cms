@@ -4,7 +4,6 @@ namespace Kirby\Panel\Ui;
 
 use Kirby\Cms\ModelWithContent;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Http\Url;
 use Kirby\Toolkit\I18n;
 
 /**
@@ -45,6 +44,9 @@ class Stat extends Component
 		);
 	}
 
+	/**
+	 * @psalm-suppress TooFewArguments
+	 */
 	public static function from(
 		array|string $input,
 		ModelWithContent|null $model = null,
@@ -87,15 +89,9 @@ class Stat extends Component
 
 	public function link(): string|null
 	{
-		$link = $this->stringTemplate(
+		return $this->stringTemplate(
 			$this->i18n($this->link)
 		);
-
-		if (Url::hasDangerousScheme($link) === true) {
-			return null;
-		}
-
-		return $link;
 	}
 
 	public function props(): array

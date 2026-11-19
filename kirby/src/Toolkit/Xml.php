@@ -256,19 +256,9 @@ class Xml
 			$string = Html::encode($string, false);
 		}
 
-		// cache the keys/values arrays;
-		// invalidates if $entities changes
-		static $cached = null;
-		static $html   = [];
-		static $xml    = [];
-
 		$entities = self::entities();
-
-		if ($cached !== $entities) {
-			$html   = array_keys($entities);
-			$xml    = array_values($entities);
-			$cached = $entities;
-		}
+		$html = array_keys($entities);
+		$xml  = array_values($entities);
 
 		return str_replace($html, $xml, $string);
 	}
@@ -461,13 +451,7 @@ class Xml
 			return null;
 		}
 
-		// accept raw CDATA only if the entire string is made up of
-		// complete consecutive CDATA blocks without any content outside
-		if (
-			Str::startsWith($value, '<![CDATA[') === true &&
-			Str::endsWith($value, ']]>') === true &&
-			Str::matches($value, '/\]\]>(?!<!\[CDATA\[|$)/') === false
-		) {
+		if (Str::startsWith($value, '<![CDATA[') === true) {
 			return $value;
 		}
 

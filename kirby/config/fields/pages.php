@@ -71,12 +71,7 @@ return [
 				}
 
 				if ($id !== null && ($page = $kirby->page($id))) {
-					// never disclose a page the current user must not list,
-					// but keep its ID to not drop it from the value on save
-					$pages[] = match ($page->isListable()) {
-						true  => $this->pageResponse($page),
-						false => $this->protectedResponse($id)
-					};
+					$pages[] = $this->pageResponse($page);
 				}
 			}
 

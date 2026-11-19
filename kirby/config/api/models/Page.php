@@ -10,11 +10,11 @@ return [
 	'fields' => [
 		'blueprint'   => fn (Page $page) => $page->blueprint(),
 		'blueprints'  => fn (Page $page) => $page->blueprints(),
-		'children'    => fn (Page $page) => $page->children()->filter('isListable', true),
-		'content'     => fn (Page $page) => Form::for($page)->toFormValues(),
-		'drafts'      => fn (Page $page) => $page->drafts()->filter('isListable', true),
+		'children'    => fn (Page $page) => $page->children(),
+		'content'     => fn (Page $page) => Form::for($page)->values(),
+		'drafts'      => fn (Page $page) => $page->drafts(),
 		'errors'      => fn (Page $page) => $page->errors(),
-		'files'       => fn (Page $page) => $page->files()->sorted()->filter('isListable', true),
+		'files'       => fn (Page $page) => $page->files()->sorted(),
 		'hasChildren' => fn (Page $page) => $page->hasChildren(),
 		'hasDrafts'   => fn (Page $page) => $page->hasDrafts(),
 		'hasFiles'    => fn (Page $page) => $page->hasFiles(),
@@ -23,25 +23,15 @@ return [
 		'num'     	  => fn (Page $page) => $page->num(),
 		'options' 	  => fn (Page $page) => $page->panel()->options(['preview']),
 		'panelImage'  => fn (Page $page) => $page->panel()->image(),
-		'parent'      => function (Page $page) {
-			$parent = $page->parent();
-
-			if ($parent === null || $parent->isListable() === false) {
-				return null;
-			}
-
-			return $parent;
-		},
-		'parents'     => fn (Page $page) => $page->parents()->flip()->filter('isListable', true),
+		'parent'      => fn (Page $page) => $page->parent(),
+		'parents'     => fn (Page $page) => $page->parents()->flip(),
 		'previewUrl'  => fn (Page $page) => $page->previewUrl(),
 		'siblings'    => function (Page $page) {
 			if ($page->isDraft() === true) {
-				$siblings = $page->parentModel()->children()->not($page);
-			} else {
-				$siblings = $page->siblings();
+				return $page->parentModel()->children()->not($page);
 			}
 
-			return $siblings->filter('isListable', true);
+			return $page->siblings();
 		},
 		'slug'     => fn (Page $page) => $page->slug(),
 		'status'   => fn (Page $page) => $page->status(),
@@ -78,7 +68,9 @@ return [
 			'content',
 			'status',
 			'options',
+			'next'    => ['id', 'slug', 'title'],
 			'parents' => ['id', 'slug', 'title'],
+			'prev'    => ['id', 'slug', 'title'],
 			'previewUrl',
 			'slug',
 			'title',

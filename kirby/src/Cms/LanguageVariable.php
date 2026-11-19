@@ -38,13 +38,13 @@ class LanguageVariable
 	): static {
 		if (is_numeric($key) === true) {
 			throw new InvalidArgumentException(
-				key: 'language.variable.numeric'
+				message: 'The variable key must not be numeric'
 			);
 		}
 
-		if ($key === '') {
+		if (empty($key) === true) {
 			throw new InvalidArgumentException(
-				key: 'language.variable.key'
+				message: 'The variable needs a valid key'
 			);
 		}
 
@@ -52,17 +52,15 @@ class LanguageVariable
 		$language     = $kirby->defaultLanguage();
 		$translations = $language->translations();
 
-		if (isset($translations[$key]) === true) {
-			throw new DuplicateException(
-				key: 'language.variable.duplicate',
-				data: ['key' => $key]
-			);
-		}
+		if ($kirby->translation()->get($key) !== null) {
+			if (isset($translations[$key]) === true) {
+				throw new DuplicateException(
+					message: 'The variable already exists'
+				);
+			}
 
-		if (isset($kirby->coreI18nStrings($language->code())[$key]) === true) {
 			throw new DuplicateException(
-				key: 'language.variable.core',
-				data: ['key' => $key]
+				message: 'The variable is part of the core translation and cannot be overwritten'
 			);
 		}
 

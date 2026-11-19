@@ -7,39 +7,23 @@ use Kirby\Cms\App;
 use Kirby\Cms\Page;
 
 /**
- * UUID for $page
+ * UUID for \Kirby\Cms\Page
+ * @since 3.8.0
  *
  * @package   Kirby Uuid
  * @author    Nico Hoffmann <nico@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
- * @since     3.8.0
- *
- * @extends \Kirby\Uuid\ModelUuid<\Kirby\Cms\Page>
  */
 class PageUuid extends ModelUuid
 {
 	protected const TYPE = 'page';
 
 	/**
-	 * Removes the current UUID from cache,
-	 * recursively including all children if needed
+	 * @var \Kirby\Cms\Page|null
 	 */
-	public function clear(bool $recursive = false): bool
-	{
-		/**
-		 * If $recursive, also clear UUIDs from cache for all children
-		 * @var \Kirby\Cms\Page $model
-		 */
-		if ($recursive === true && $model = $this->model()) {
-			foreach ($model->childrenAndDrafts() as $child) {
-				$child->uuid()->clear(true);
-			}
-		}
-
-		return parent::clear();
-	}
+	public Identifiable|null $model = null;
 
 	/**
 	 * Looks up UUID in cache and resolves
@@ -49,13 +33,7 @@ class PageUuid extends ModelUuid
 	{
 		if ($key = $this->key()) {
 			if ($value = Uuids::cache()->get($key)) {
-				$page = App::instance()->page($value);
-
-				// the cached path can be stale,
-				// e.g. when the page has been moved or copied
-				if ($this->isFor($page) === true) {
-					return $page;
-				}
+				return App::instance()->page($value);
 			}
 		}
 
@@ -75,27 +53,6 @@ class PageUuid extends ModelUuid
 			yield $page;
 			yield from static::index($page);
 		}
-	}
-
-	/**
-	 * Feeds the UUID for the page (and optionally
-	 * its children) into the cache
-	 */
-	public function populate(
-		bool $force = false,
-		bool $recursive = false
-	): bool {
-		/**
-		 * If $recursive, also populate UUIDs for all children
-		 * @var \Kirby\Cms\Page $model
-		 */
-		if ($recursive === true && $model = $this->model()) {
-			foreach ($model->childrenAndDrafts() as $child) {
-				$child->uuid()->populate($force, true);
-			}
-		}
-
-		return parent::populate($force);
 	}
 
 	/**

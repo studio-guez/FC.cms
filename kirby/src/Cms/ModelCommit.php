@@ -145,19 +145,9 @@ class ModelCommit
 			'create' =>	[
 				'user' => $state
 			],
-			'createAvatar' => [
-				'user' => $state
-			],
 			'delete' => [
 				'status' => $state,
 				'user'   => $model
-			],
-			'deleteAvatar' => [
-				'status' => $state,
-				'user'   => $model
-			],
-			'replaceAvatar' => [
-				'user' => $state
 			],
 			default  => [
 				'newUser' => $state,

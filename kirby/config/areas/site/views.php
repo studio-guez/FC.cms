@@ -1,5 +1,6 @@
 <?php
 
+use Kirby\Cms\App;
 use Kirby\Cms\Find;
 use Kirby\Exception\PermissionException;
 use Kirby\Panel\Ui\Buttons\ViewButtons;
@@ -52,7 +53,7 @@ return [
 	],
 	'site' => [
 		'pattern' => 'site',
-		'action'  => fn () => Find::site()->panel()->view()
+		'action'  => fn () => App::instance()->site()->panel()->view()
 	],
 	'site.file' => [
 		'pattern' => 'site/files/(:any)',
@@ -63,7 +64,7 @@ return [
 	'site.preview' => [
 		'pattern' => 'site/preview/(changes|latest|compare)',
 		'action'  => function (string $versionId) {
-			$site = Find::site();
+			$site = App::instance()->site();
 			$view = $site->panel()->view();
 			$src  = [
 				'latest'  => $site->previewUrl('latest'),

@@ -7,7 +7,6 @@ use GdImage;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Filesystem\F;
-use Kirby\Toolkit\Escape;
 use Stringable;
 
 /**
@@ -73,6 +72,7 @@ class QrCode implements Stringable
 
 		ob_start();
 		imagepng($image);
+		imagedestroy($image);
 		$data = ob_get_contents();
 		ob_end_clean();
 
@@ -153,10 +153,7 @@ class QrCode implements Stringable
 			fn ($x, $y, $width, $height) => 'M' . $x . ',' . $y . 'h' . $width . 'v' . $height . 'h-' . $width . 'z'
 		);
 
-		// escape the values that end up in SVG (XML) attributes
-		$color = Escape::xml($color);
-		$back  = Escape::xml($back);
-		$size  = $size ? ' style="width: ' . Escape::xml((string)$size) . '"' : '';
+		$size = $size ? ' style="width: ' . $size . '"' : '';
 
 		return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' . $vbw . ' ' . $vbh . '" stroke="none"' . $size . '>' .
 			'<rect width="100%" height="100%" fill="' . $back . '"/>' .
@@ -1035,14 +1032,6 @@ class QrCode implements Stringable
 			if ($length <= static::CAPACITY[$version - 1][$ecl][$mode]) {
 				break;
 			}
-		}
-
-		// reject data that does not fit into the largest QR version
-		// instead of overflowing into undefined version/capacity
-		if ($version > 40) {
-			throw new InvalidArgumentException(
-				message: 'The provided data exceeds the maximum capacity of a QR code'
-			);
 		}
 
 		// with the version in place, try to raise

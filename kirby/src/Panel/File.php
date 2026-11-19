@@ -51,7 +51,10 @@ class File extends Model
 			case 'page':
 				/** @var \Kirby\Cms\Page $parent */
 				$breadcrumb = $this->model->parents()->flip()->values(
-					fn ($parent) => $parent->panel()->crumb()
+					fn ($parent) => [
+						'label' => $parent->title()->toString(),
+						'link'  => $parent->panel()->url(true),
+					]
 				);
 		}
 
@@ -193,14 +196,13 @@ class File extends Model
 	 * Returns the setup for a dropdown option
 	 * which is used in the changes dropdown
 	 * for example
-	 *
-	 * @deprecated 5.1.4 Use the Kirby\Panel\Ui\Item\FileItem class instead
 	 */
 	public function dropdownOption(): array
 	{
-		return (new FileItem(file: $this->model))->props() + [
-			'icon' => 'image'
-		];
+		return [
+			'icon' => 'image',
+			'text' => $this->model->filename(),
+		] + parent::dropdownOption();
 	}
 
 	/**
@@ -227,17 +229,10 @@ class File extends Model
 			'xlsx'  => 'green-500',
 		];
 
-		if ($color = $extensions[$this->model->extension()] ?? null) {
-			return $color;
-		}
-
-		$type = $this->model->type();
-
-		if ($type && ($color = $types[$type] ?? null)) {
-			return $color;
-		}
-
-		return parent::imageDefaults()['color'];
+		return
+			$extensions[$this->model->extension()] ??
+			$types[$this->model->type()] ??
+			parent::imageDefaults()['color'];
 	}
 
 	/**
@@ -277,17 +272,10 @@ class File extends Model
 			'xlsx'  => 'table',
 		];
 
-		if ($icon = $extensions[$this->model->extension()] ?? null) {
-			return $icon;
-		}
-
-		$type = $this->model->type();
-
-		if ($type && ($icon = $types[$type] ?? null)) {
-			return $icon;
-		}
-
-		return 'file';
+		return
+			$extensions[$this->model->extension()] ??
+			$types[$this->model->type()] ??
+			'file';
 	}
 
 	/**
@@ -450,7 +438,7 @@ class File extends Model
 	public function prevNext(): array
 	{
 		$file     = $this->model;
-		$siblings = $file->templateSiblings()->filter('isListable', true)->sortBy(
+		$siblings = $file->templateSiblings()->sortBy(
 			'sort',
 			'asc',
 			'filename',

@@ -1,7 +1,6 @@
 <?php
 
 use Kirby\Cms\System;
-use Kirby\Exception\PermissionException;
 use Kirby\Toolkit\Str;
 
 /**
@@ -31,26 +30,23 @@ return [
 		'requirements' => fn (System $system) => $system->toArray(),
 		'site'         => fn (System $system) => $system->title(),
 		'slugs'        => fn () => Str::$language,
-		// provide the value even if `site.access` permission is disabled
-		'title'       => fn () => $this->kirby()->site()->title()->value(),
+		'title'        => fn () => $this->site()->title()->value(),
 		'translation' => function () {
-			$kirby = $this->kirby();
-			$code = $kirby->user()?->language() ??
-					$kirby->panelLanguage();
+			$code = $this->user()?->language() ??
+					$this->kirby()->panelLanguage();
 
 			return
-				$kirby->translation($code) ??
-				$kirby->translation('en');
+				$this->kirby()->translation($code) ??
+				$this->kirby()->translation('en');
 		},
 		'kirbytext' => fn () => $this->kirby()->option('panel.kirbytext') ?? true,
-		'user'      => fn () => $this->user(),
-		'version'   => function () {
-			try {
-				$this->validateAreaAccess('system');
+		'user' => fn () => $this->user(),
+		'version' => function () {
+			if ($this->user()?->role()->permissions()->for('access', 'system') === true) {
 				return $this->kirby()->version();
-			} catch (PermissionException) {
-				return null;
 			}
+
+			return null;
 		}
 	],
 	'type'   => System::class,

@@ -6,7 +6,6 @@ use DOMElement;
 use DOMNode;
 use DOMNodeList;
 use DOMText;
-use Kirby\Http\Url;
 use Kirby\Toolkit\Html;
 
 /**
@@ -63,16 +62,10 @@ class Inline
 		$defaults = $mark['defaults'] ?? [];
 
 		foreach ($mark['attrs'] ?? [] as $attr) {
-			$value = match ($node->hasAttribute($attr)) {
+			$attrs[$attr] = match ($node->hasAttribute($attr)) {
 				true    => $node->getAttribute($attr),
 				default => $defaults[$attr] ?? null
 			};
-
-			if ($attr === 'href' && Url::hasDangerousScheme($value) === true) {
-				continue;
-			}
-
-			$attrs[$attr] = $value;
 		}
 
 		return $attrs;

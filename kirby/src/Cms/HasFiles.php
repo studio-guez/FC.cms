@@ -2,7 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Uuid\Uuid;
 
 /**
@@ -42,7 +41,6 @@ trait HasFiles
 	 *
 	 * @param bool $move If set to `true`, the source will be deleted
 	 */
-	#[BlockCollectionAccess]
 	public function createFile(array $props, bool $move = false): File
 	{
 		$props = [

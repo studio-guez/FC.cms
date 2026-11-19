@@ -30,21 +30,6 @@ class VersionRules
 				message: 'The version already exists'
 			);
 		}
-
-		// a version can only be locked if it already exists
-		// in at least one language
-		if ($version->exists('*') === false) {
-			return;
-		}
-
-		$lock = $version->lock('*');
-
-		if ($lock->isLocked() === true) {
-			throw new LockedContentException(
-				lock: $lock,
-				key: 'content.lock.create'
-			);
-		}
 	}
 
 	/**
@@ -71,11 +56,9 @@ class VersionRules
 		Version $version,
 		Language $language
 	): void {
-		$lock = $version->lock('*');
-
-		if ($lock->isLocked() === true) {
+		if ($version->isLocked('*') === true) {
 			throw new LockedContentException(
-				lock: $lock,
+				lock: $version->lock('*'),
 				key: 'content.lock.delete'
 			);
 		}
@@ -91,21 +74,17 @@ class VersionRules
 		static::ensure($fromVersion, $fromLanguage);
 
 		// check if the source version is locked in any language
-		$fromLock = $fromVersion->lock('*');
-
-		if ($fromLock->isLocked() === true) {
+		if ($fromVersion->isLocked('*') === true) {
 			throw new LockedContentException(
-				lock: $fromLock,
+				lock: $fromVersion->lock('*'),
 				key: 'content.lock.move'
 			);
 		}
 
 		// check if the target version is locked in any language
-		$toLock = $toVersion->lock('*');
-
-		if ($toLock->isLocked() === true) {
+		if ($toVersion->isLocked('*') === true) {
 			throw new LockedContentException(
-				lock: $toLock,
+				lock: $toVersion->lock('*'),
 				key: 'content.lock.update'
 			);
 		}
@@ -126,11 +105,9 @@ class VersionRules
 		static::ensure($version, $language);
 
 		// check if the version is locked in any language
-		$lock = $version->lock('*');
-
-		if ($lock->isLocked() === true) {
+		if ($version->isLocked('*') === true) {
 			throw new LockedContentException(
-				lock: $lock,
+				lock: $version->lock('*'),
 				key: 'content.lock.publish'
 			);
 		}
@@ -152,11 +129,9 @@ class VersionRules
 		static::ensure($version, $language);
 
 		// check if the version is locked in any language
-		$lock = $version->lock('*');
-
-		if ($lock->isLocked() === true) {
+		if ($version->isLocked('*') === true) {
 			throw new LockedContentException(
-				lock: $lock,
+				lock: $version->lock('*'),
 				key: 'content.lock.replace'
 			);
 		}
@@ -176,11 +151,9 @@ class VersionRules
 	): void {
 		static::ensure($version, $language);
 
-		$lock = $version->lock('*');
-
-		if ($lock->isLocked() === true) {
+		if ($version->isLocked('*') === true) {
 			throw new LockedContentException(
-				lock: $lock,
+				lock: $version->lock('*'),
 				key: 'content.lock.update'
 			);
 		}

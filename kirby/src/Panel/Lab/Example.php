@@ -2,7 +2,6 @@
 
 namespace Kirby\Panel\Lab;
 
-use Kirby\Cms\Inventory;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
@@ -49,7 +48,7 @@ class Example
 			return null;
 		}
 
-		if ($tab !== null && array_key_exists($tab, $this->tabs) === true) {
+		if (array_key_exists($tab, $this->tabs) === true) {
 			return $tab;
 		}
 
@@ -60,7 +59,7 @@ class Example
 	{
 		$tabs = [];
 
-		foreach (Inventory::for($this->root)['children'] as $child) {
+		foreach (Dir::inventory($this->root)['children'] as $child) {
 			$tabs[$child['dirname']] = [
 				'name'  => $child['dirname'],
 				'label' => $child['slug'],

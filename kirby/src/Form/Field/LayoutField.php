@@ -11,7 +11,6 @@ use Kirby\Data\Data;
 use Kirby\Data\Json;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\Form;
-use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Toolkit\Str;
 use Throwable;
 
@@ -35,7 +34,6 @@ class LayoutField extends BlocksField
 	 * @psalm-suppress MethodSignatureMismatch
 	 * @todo Remove psalm suppress after https://github.com/vimeo/psalm/issues/8673 is fixed
 	 */
-	#[BlockCollectionAccess]
 	public function fill(mixed $value): static
 	{
 		$attrs   = $this->attrsForm();

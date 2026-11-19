@@ -63,14 +63,15 @@ return [
 	'computed' => [
 		'value' => function () {
 			$value = trim($this->value ?? '');
-			$value = Sane::sanitizeProseMirrorFields($value);
+			$value = Sane::sanitize($value, 'html');
+
+			// convert non-breaking spaces to HTML entity
+			// as that's how ProseMirror handles it internally;
+			// will allow comparing saved and current content
+			$value = str_replace(' ', '&nbsp;', $value);
+
 			return $value;
 		}
-	],
-	'methods' => [
-		'emptyValue' => function () {
-			return '';
-		},
 	],
 	'validations' => [
 		'minlength' => function ($value) {

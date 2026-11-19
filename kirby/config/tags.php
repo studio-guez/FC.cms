@@ -2,9 +2,9 @@
 
 use Kirby\Cms\Html;
 use Kirby\Cms\Url;
+use Kirby\Exception\NotFoundException;
 use Kirby\Text\KirbyTag;
 use Kirby\Toolkit\A;
-use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\Str;
 use Kirby\Uuid\Uuid;
 
@@ -17,29 +17,13 @@ return [
 	 * Date
 	 */
 	'date' => [
-		'attr' => [
-			'expiry'
-		],
+		'attr' => [],
 		'html' => function (KirbyTag $tag): string {
 			if (strtolower($tag->date) === 'year') {
-				// make sure cached pages reset the year at New Year,
-				// unless a custom expiry point has been requested
-				$tag->kirby()->response()->expires(
-					$tag->expiry ?? 'first day of January next year'
-				);
-
 				return date('Y');
 			}
 
-			// let authors control the cache expiry for custom formats,
-			// e.g. `(date: Y-m-d expiry: tomorrow)`
-			if ($tag->expiry !== null) {
-				$tag->kirby()->response()->expires($tag->expiry);
-			}
-
-			// escape the formatted date to prevent injecting HTML
-			// through special characters in the tag value
-			return Escape::html(date($tag->date));
+			return date($tag->date);
 		}
 	],
 
@@ -216,46 +200,34 @@ return [
 			'text',
 		],
 		'html' => function (KirbyTag $tag): string {
-			// keep $tag->value as the original value (e.g. UUID) for errors
-			$link = $tag->value;
-
 			if (empty($tag->lang) === false) {
-				$link = Url::to($link, $tag->lang);
+				$tag->value = Url::to($tag->value, $tag->lang);
 			}
 
 			// if value is a UUID, resolve to page/file model
 			// and use the URL as value
-			if (Uuid::is($link, ['page', 'file']) === true) {
-				$link = Uuid::for($link)?->toUrl();
+			if (Uuid::is($tag->value, ['page', 'file']) === true) {
+				$tag->value = Uuid::for($tag->value)?->toUrl();
 			}
 
-			// broken link: handle inline instead of turning the
-			// whole page into the error page
-			if ($link === null) {
-				// debug: visible inline error, no styles to avoid clashes
+			// if url is empty, throw exception or link to the error page
+			if ($tag->value === null) {
 				if ($tag->kirby()->option('debug', false) === true) {
-					$error = 'The link "' . $tag->value . '" cannot be found';
+					$error = 'The linked page cannot be found';
 
-					if ($tag->text !== null && $tag->text !== '') {
+					if (empty($tag->text) === false) {
 						$error .= ' for the link text "' . $tag->text . '"';
 					}
 
-					return Html::tag('span', '🚨 ' . $error, [
-						'class' => Str::trim('kirby-broken-link ' . $tag->class)
-					]);
+					throw new NotFoundException(
+						message: $error
+					);
 				}
 
-				// otherwise drop the link, keep its text (if any)
-				if ($tag->text !== null && $tag->text !== '') {
-					return Html::tag('span', $tag->text, [
-						'class' => $tag->class
-					]);
-				}
-
-				return '';
+				$tag->value = Url::to($tag->kirby()->site()->errorPageId());
 			}
 
-			return Html::a($link, $tag->text, [
+			return Html::a($tag->value, $tag->text, [
 				'rel'    => $tag->rel,
 				'class'  => $tag->class,
 				'role'   => $tag->role,

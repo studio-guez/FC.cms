@@ -164,9 +164,6 @@ return [
 		}
 	],
 	'methods' => [
-		'emptyValue' => function () {
-			return [];
-		},
 		'rows' => function ($value) {
 			$rows  = Data::decode($value, 'yaml');
 			$value = [];

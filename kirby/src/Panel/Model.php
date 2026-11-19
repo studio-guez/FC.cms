@@ -201,11 +201,14 @@ abstract class Model
 		$image = $this->model->query($query ?? null);
 
 		// validate the query result
-		return match (true) {
-			$image instanceof CmsFile === true && $image->isListable() === true => $image,
-			$image instanceof Asset === true => $image,
-			default => null
-		};
+		if (
+			$image instanceof CmsFile ||
+			$image instanceof Asset
+		) {
+			return $image;
+		}
+
+		return null;
 	}
 
 	/**

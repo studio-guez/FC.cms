@@ -140,10 +140,6 @@ trait AppPlugins
 		foreach ($areas as $id => $area) {
 			$this->extensions['areas'][$id] ??= [];
 			$this->extensions['areas'][$id][] = $area;
-
-			// keep track of custom areas to add
-			// default access permission for them
-			Permissions::$extendedAreas[$id] = true;
 		}
 
 		return $this->extensions['areas'];
@@ -766,15 +762,12 @@ trait AppPlugins
 	 */
 	protected function extensionsFromOptions(): void
 	{
-		// directly register api components, routes and hooks from options.
+		// register routes and hooks from options
 		$this->extend([
 			'api'    => $this->options['api']    ?? [],
 			'routes' => $this->options['routes'] ?? [],
 			'hooks'  => $this->options['hooks']  ?? []
 		]);
-
-		// register everything under the extensions key
-		$this->extend($this->options['extensions'] ?? []);
 	}
 
 	/**

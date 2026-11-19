@@ -2,8 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Toolkit\BlockCollectionAccess;
-
 /**
  * HasModels
  *
@@ -25,7 +23,6 @@ trait HasModels
 	 * Adds new models to the registry
 	 * @internal
 	 */
-	#[BlockCollectionAccess]
 	public static function extendModels(array $models): array
 	{
 		return static::$models = [

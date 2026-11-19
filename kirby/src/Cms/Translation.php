@@ -3,7 +3,6 @@
 namespace Kirby\Cms;
 
 use Kirby\Data\Data;
-use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Toolkit\Str;
 
 /**
@@ -106,7 +105,6 @@ class Translation
 	 * Loads the translation from the
 	 * json file in Kirby's translations folder
 	 */
-	#[BlockCollectionAccess]
 	public static function load(
 		string $code,
 		string $root,

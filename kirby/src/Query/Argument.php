@@ -3,7 +3,6 @@
 namespace Kirby\Query;
 
 use Closure;
-use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Toolkit\Str;
 
 /**
@@ -101,7 +100,6 @@ class Argument
 	 * Return the argument value and
 	 * resolves nested objects to scaler types
 	 */
-	#[BlockCollectionAccess]
 	public function resolve(array|object $data = []): mixed
 	{
 		// don't resolve the Closure immediately, instead

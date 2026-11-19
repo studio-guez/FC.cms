@@ -462,9 +462,11 @@ class Date extends DateTime implements Stringable
 		}
 
 		if (is_array($input) === true) {
-			$merged = [...$default, ...$input];
-			$merged['unit'] = strtolower($merged['unit']);
-			return $merged;
+			return [
+				...$default,
+				...$input,
+				'unit' => strtolower($input['unit'])
+			];
 		}
 
 		if (is_int($input) === true) {

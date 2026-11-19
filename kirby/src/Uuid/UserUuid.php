@@ -7,20 +7,23 @@ use Kirby\Cms\App;
 use Kirby\Cms\User;
 
 /**
- * UUID for $user
+ * UUID for \Kirby\Cms\User
+ * @since 3.8.0
  *
  * @package   Kirby Uuid
  * @author    Nico Hoffmann <nico@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
- * @since     3.8.0
- *
- * @extends \Kirby\Uuid\Uuid<\Kirby\Cms\User>
  */
 class UserUuid extends Uuid
 {
 	protected const TYPE = 'user';
+
+	/**
+	 * @var \Kirby\Cms\User|null
+	 */
+	public Identifiable|null $model = null;
 
 	/*
 	 * Returns the user ID

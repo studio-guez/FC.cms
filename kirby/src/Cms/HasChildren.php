@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Filesystem\Dir;
 use Kirby\Toolkit\Str;
 
 /**
@@ -90,7 +91,7 @@ trait HasChildren
 		$kirby = $this->kirby();
 
 		// create the inventory for all drafts
-		$inventory = Inventory::for(
+		$inventory = Dir::inventory(
 			$this->root() . '/_drafts',
 			$kirby->contentExtension(),
 			$kirby->contentIgnore(),

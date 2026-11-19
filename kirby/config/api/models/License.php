@@ -1,37 +1,17 @@
 <?php
 
 use Kirby\Cms\License;
-use Kirby\Exception\PermissionException;
 
 /**
  * Page
  */
 return [
 	'fields' => [
-		'status' => function (License $license) {
-			try {
-				$this->validateAreaAccess('system');
-				return $license->status()->value();
-			} catch (PermissionException) {
-				return null;
-			}
+		'status' => fn (License $license) => $license->status()->value(),
+		'code'   => function (License $license) {
+			return $this->kirby()->user()->isAdmin() ? $license->code() : $license->code(true);
 		},
-		'code' => function (License $license) {
-			try {
-				$this->validateAreaAccess('system');
-				return $this->kirby()->user()->isAdmin() ? $license->code() : $license->code(true);
-			} catch (PermissionException) {
-				return null;
-			}
-		},
-		'type' => function (License $license) {
-			try {
-				$this->validateAreaAccess('system');
-				return $license->type()->label();
-			} catch (PermissionException) {
-				return null;
-			}
-		}
+		'type' => fn (License $license) => $license->type()->label(),
 	],
 	'type' => License::class,
 ];

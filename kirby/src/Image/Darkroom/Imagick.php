@@ -163,9 +163,21 @@ class Imagick extends Darkroom
 	 */
 	protected function resize(Image $image, array $options): Image
 	{
-		if ($crop = $options['crop'] ?? null) {
+		// simple resize
+		if ($options['crop'] === false) {
+			$image->thumbnailImage(
+				$options['width'],
+				$options['height'],
+				true
+			);
+
+			return $image;
+		}
+
+		// crop based on focus point
+		if (Focus::isFocalPoint($options['crop']) === true) {
 			if ($focus = Focus::coords(
-				$crop,
+				$options['crop'],
 				$options['sourceWidth'],
 				$options['sourceHeight'],
 				$options['width'],
@@ -178,16 +190,39 @@ class Imagick extends Darkroom
 					$focus['y1']
 				);
 
+				$image->thumbnailImage(
+					$options['width'],
+					$options['height'],
+					true
+				);
+
+				return $image;
 			}
 		}
 
-		$image->resizeImage(
-			$options['width'],
-			$options['height'],
-			Image::FILTER_LANCZOS,
-			1,
+		// translate the gravity option into something imagemagick understands
+		$gravity = match ($options['crop'] ?? null) {
+			'top left'     => Image::GRAVITY_NORTHWEST,
+			'top'          => Image::GRAVITY_NORTH,
+			'top right'    => Image::GRAVITY_NORTHEAST,
+			'left'         => Image::GRAVITY_WEST,
+			'right'        => Image::GRAVITY_EAST,
+			'bottom left'  => Image::GRAVITY_SOUTHWEST,
+			'bottom'       => Image::GRAVITY_SOUTH,
+			'bottom right' => Image::GRAVITY_SOUTHEAST,
+			default        => Image::GRAVITY_CENTER
+		};
+
+		$landscape = $options['width'] >= $options['height'];
+
+		$image->thumbnailImage(
+			$landscape ? $options['width'] : $image->getImageWidth(),
+			$landscape ? $image->getImageHeight() : $options['height'],
 			true
 		);
+
+		$image->setGravity($gravity);
+		$image->cropImage($options['width'], $options['height'], 0, 0);
 
 		return $image;
 	}
@@ -197,10 +232,8 @@ class Imagick extends Darkroom
 	 */
 	protected function save(Image $image, string $file, array $options): bool
 	{
-		// set the output format explicitly if specified;
-		// writing to the original path
 		if ($options['format'] !== null) {
-			$image->setImageFormat($options['format']);
+			$file = pathinfo($file, PATHINFO_DIRNAME) . '/' . pathinfo($file, PATHINFO_FILENAME) . '.' . $options['format'];
 		}
 
 		return $image->writeImages($file, true);

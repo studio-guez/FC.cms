@@ -8,10 +8,10 @@ use Kirby\Content\Field;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
+use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Panel\User as Panel;
 use Kirby\Session\Session;
-use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Toolkit\Str;
 use SensitiveParameter;
 
@@ -82,10 +82,6 @@ class User extends ModelWithContent
 		$this->password = $props['password'] ?? null;
 		$this->role     = $set('role', fn ($role) => Str::lower(trim($role)));
 
-		if (isset($props['credentials'])) {
-			$this->credentials = $props['credentials'];
-		}
-
 		// Set blueprint before setting content
 		// or translations in the parent constructor.
 		// Otherwise, the blueprint definition cannot be
@@ -136,7 +132,6 @@ class User extends ModelWithContent
 	 * Returns the url to the api endpoint
 	 * @internal
 	 */
-	#[BlockCollectionAccess]
 	public function apiUrl(bool $relative = false): string
 	{
 		if ($relative === true) {
@@ -230,26 +225,15 @@ class User extends ModelWithContent
 	 * Hashes the provided password unless it is `null`,
 	 * which will leave it as `null`
 	 */
-	#[BlockCollectionAccess]
 	public static function hashPassword(
 		#[SensitiveParameter]
 		string|null $password = null
 	): string|null {
-		if ($password !== null && $password !== '') {
+		if ($password !== null) {
 			$password = password_hash($password, PASSWORD_DEFAULT);
 		}
 
 		return $password;
-	}
-
-	/**
-	 * Checks if the user has a stored password
-	 * @since 5.3.0
-	 */
-	public function hasPassword(): bool
-	{
-		$password = $this->password();
-		return $password !== '' && $password !== null;
 	}
 
 	/**
@@ -264,7 +248,6 @@ class User extends ModelWithContent
 	 * Returns the inventory of files
 	 * children and content files
 	 */
-	#[BlockCollectionAccess]
 	public function inventory(): array
 	{
 		if ($this->inventory !== null) {
@@ -273,7 +256,7 @@ class User extends ModelWithContent
 
 		$kirby = $this->kirby();
 
-		return $this->inventory = Inventory::for(
+		return $this->inventory = Dir::inventory(
 			$this->root(),
 			$kirby->contentExtension(),
 			$kirby->contentIgnore(),
@@ -294,15 +277,6 @@ class User extends ModelWithContent
 	}
 
 	/**
-	 * Checks if the user is accessible to the current user
-	 * @since 5.4.0
-	 */
-	public function isAccessible(): bool
-	{
-		return UserPermissions::canFromCache($this, 'access');
-	}
-
-	/**
 	 * Checks if this user has the admin role
 	 */
 	public function isAdmin(): bool
@@ -317,20 +291,6 @@ class User extends ModelWithContent
 	public function isKirby(): bool
 	{
 		return $this->isAdmin() && $this->id() === 'kirby';
-	}
-
-	/**
-	 * Checks if the user is listable by the current user
-	 * @since 5.4.0
-	 */
-	public function isListable(): bool
-	{
-		// not accessible also means not listable
-		if ($this->isAccessible() === false) {
-			return false;
-		}
-
-		return UserPermissions::canFromCache($this, 'list');
 	}
 
 	/**
@@ -384,7 +344,6 @@ class User extends ModelWithContent
 	 *
 	 * @param \Kirby\Session\Session|array|null $session Session options or session object to set the user in
 	 */
-	#[BlockCollectionAccess]
 	public function login(
 		#[SensitiveParameter]
 		string $password,
@@ -401,7 +360,6 @@ class User extends ModelWithContent
 	 *
 	 * @param \Kirby\Session\Session|array|null $session Session options or session object to set the user in
 	 */
-	#[BlockCollectionAccess]
 	public function loginPasswordless(
 		Session|array|null $session = null
 	): void {
@@ -439,7 +397,6 @@ class User extends ModelWithContent
 	 *
 	 * @param \Kirby\Session\Session|array|null $session Session options or session object to unset the user in
 	 */
-	#[BlockCollectionAccess]
 	public function logout(Session|array|null $session = null): void
 	{
 		$kirby   = $this->kirby();
@@ -470,7 +427,6 @@ class User extends ModelWithContent
 	/**
 	 * Returns the absolute path to the media folder for the user
 	 */
-	#[BlockCollectionAccess]
 	public function mediaDir(): string
 	{
 		return $this->kirby()->root('media') . '/users/' . $this->id();
@@ -479,7 +435,6 @@ class User extends ModelWithContent
 	/**
 	 * @see `::mediaDir`
 	 */
-	#[BlockCollectionAccess]
 	public function mediaRoot(): string
 	{
 		return $this->mediaDir();
@@ -551,7 +506,6 @@ class User extends ModelWithContent
 	/**
 	 * Returns the encrypted user password
 	 */
-	#[BlockCollectionAccess]
 	public function password(): string|null
 	{
 		return $this->password ??= $this->readPassword();
@@ -561,7 +515,6 @@ class User extends ModelWithContent
 	 * Returns the timestamp when the password
 	 * was last changed
 	 */
-	#[BlockCollectionAccess]
 	public function passwordTimestamp(): int|null
 	{
 		$file = $this->secretsFile();
@@ -600,59 +553,29 @@ class User extends ModelWithContent
 	}
 
 	/**
-	 * Returns the roles that the authenticated user
-	 * may assign to this user via a role change.
+	 * Returns all available roles for this user,
+	 * that the authenticated user can change to.
 	 *
-	 * The result is intentionally scoped to the context
-	 * of this specific user — it answers the question
-	 * "which roles can I give to *this* user right now?"
-	 * rather than "which roles exist in the system?".
-	 * It is primarily used to populate the role dropdown
-	 * in the Panel and to validate role changes.
-	 *
-	 * Two scenarios are possible:
-	 *
-	 * 1. The authenticated user does not have the
-	 *    `changeRole` permission for this user:
-	 *    Only the user's current role is returned,
-	 *    provided it is accessible. This keeps the
-	 *    dropdown functional (a role must be selected)
-	 *    without exposing any other options.
-	 *
-	 * 2. The authenticated user has the `changeRole`
-	 *    permission: All roles that are accessible and
-	 *    that the authenticated user is allowed to
-	 *    create are returned via `Roles::canBeCreated()`.
-	 *    The create-permission check is used here because
-	 *    assigning a role to a user is equivalent to
-	 *    creating a user with that role.
-	 *
-	 * In both cases inaccessible roles are excluded,
-	 * because `Roles::canBeCreated()` applies
-	 * `filter('isAccessible', true)` internally and
-	 * the no-permission branch applies it explicitly.
-	 *
-	 * For all roles the authenticated user can assign
-	 * independent of a specific user context,
+	 * For all roles the current user can create
 	 * use `$kirby->roles()->canBeCreated()`.
 	 */
 	public function roles(): Roles
 	{
 		$kirby = $this->kirby();
+		$roles = $kirby->roles();
 
 		// if the authenticated user doesn't have the permission to change
 		// the role of this user, only the current role is available
 		if ($this->permissions()->can('changeRole') === false) {
-			return $kirby->roles()->filter('isAccessible', true)->filter('id', $this->role()->id());
+			return $roles->filter('id', $this->role()->id());
 		}
 
-		return $kirby->roles()->canBeCreated();
+		return $roles->canBeCreated();
 	}
 
 	/**
 	 * The absolute path to the user directory
 	 */
-	#[BlockCollectionAccess]
 	public function root(): string
 	{
 		return $this->kirby()->root('accounts') . '/' . $this->id();
@@ -671,7 +594,6 @@ class User extends ModelWithContent
 	 * Reads a specific secret from the user secrets file on disk
 	 * @since 4.0.0
 	 */
-	#[BlockCollectionAccess]
 	public function secret(string $key): mixed
 	{
 		return $this->readSecrets()[$key] ?? null;
@@ -723,7 +645,6 @@ class User extends ModelWithContent
 	 * Converts the most important user properties
 	 * to an array
 	 */
-	#[BlockCollectionAccess]
 	public function toArray(): array
 	{
 		return [
@@ -774,12 +695,11 @@ class User extends ModelWithContent
 	 * @throws \Kirby\Exception\InvalidArgumentException If the entered password is not valid
 	 *                                                   or does not match the user password
 	 */
-	#[BlockCollectionAccess]
 	public function validatePassword(
 		#[SensitiveParameter]
 		string|null $password = null
 	): bool {
-		if ($this->hasPassword() === false) {
+		if (empty($this->password()) === true) {
 			throw new NotFoundException(
 				key: 'user.password.undefined'
 			);

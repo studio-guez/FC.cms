@@ -1,7 +1,6 @@
 <?php
 
 use Kirby\Cms\App;
-use Kirby\Cms\LicenseType;
 use Kirby\Exception\LogicException;
 use Kirby\Panel\Field;
 use Kirby\Toolkit\I18n;
@@ -20,12 +19,11 @@ return [
 				'component' => 'k-license-dialog',
 				'props' => [
 					'license' => [
-						'code'   => $license->code($obfuscated),
-						'domain' => $license->domain(),
-						'icon'   => $status->icon(),
-						'info'   => $status->info($license->renewal('Y-m-d', 'date')),
-						'theme'  => $status->theme(),
-						'type'   => $license->label(),
+						'code'  => $license->code($obfuscated),
+						'icon'  => $status->icon(),
+						'info'  => $status->info($license->renewal('Y-m-d', 'date')),
+						'theme' => $status->theme(),
+						'type'  => $license->label(),
 					],
 					'cancelButton' => $renewable,
 					'submitButton' => $renewable ? [
@@ -92,49 +90,12 @@ return [
 				'props' => [
 					'fields' => [
 						'domain' => [
-							'label' => I18n::translate('domain'),
+							'label' => I18n::translate('license.activate.label'),
 							'type'  => 'info',
-							'theme' => 'white',
-							'icon'  => 'info',
-							'text'  => I18n::template('license.activate.domain', ['host' => $system->indexUrl()]),
-						],
-						'type' => [
-							'label'    => I18n::translate('license.activate.label'),
-							'type'     => 'toggles',
-							'required' => true,
-							'labels'   => true,
-							'grow'     => true,
-							'options'  => [
-								[
-									'icon'  => 'globe',
-									'text'  => I18n::translate('license.regular.label'),
-									'value' => 'regular'
-								],
-								[
-									'icon'  => 'key',
-									'text'  => I18n::translate('license.free.label'),
-									'value' => 'free'
-								]
-							],
-						],
-						'warning' => [
-							'type'  => 'info',
-							'theme' => 'warning',
-							'text'  => I18n::template('license.activate.' . ($local ? 'local' : 'public'), ['host' => $system->indexUrl()]),
-							'when'  => ['type' => $local ? 'regular' : 'free'],
-						],
-						'acknowledge' => [
-							'when'     => ['type' => 'free'],
-							'label'    => I18n::translate('license.activate.acknowledge.label'),
-							'type'     => 'toggle',
-							'text'     => I18n::translate('license.activate.acknowledge.text'),
-							'required' => true,
-							'help'     => I18n::template('license.activate.acknowledge.help', [
-								'url' => 'https://getkirby.com/license/free-licenses'
-							]),
+							'theme' => $local ? 'warning' : 'info',
+							'text'  => I18n::template('license.activate.' . ($local ? 'local' : 'domain'), ['host' => $system->indexUrl()])
 						],
 						'license' => [
-							'when'        => ['type' => 'regular'],
 							'label'       => I18n::translate('license.code.label'),
 							'type'        => 'text',
 							'required'    => true,
@@ -142,10 +103,7 @@ return [
 							'placeholder' => 'K-',
 							'help'        => I18n::translate('license.code.help') . ' ' . '<a href="https://getkirby.com/buy" target="_blank">' . I18n::translate('license.buy') . ' &rarr;</a>'
 						],
-						'email' => Field::email([
-							'when'     => ['type' => 'regular'],
-							'required' => true
-						])
+						'email' => Field::email(['required' => true])
 					],
 					'submitButton' => [
 						'icon'  => 'key',
@@ -154,30 +112,22 @@ return [
 					],
 					'value' => [
 						'license' => null,
-						'email'   => null,
-						'type'    => 'regular',
+						'email'   => null
 					]
 				]
 			];
 		},
 		'submit' => function () {
 			// @codeCoverageIgnoreStart
-			$kirby   = App::instance();
-			$type    = $kirby->request()->get('type', 'regular');
-			$email   = $kirby->request()->get('email');
-			$license = match ($type) {
-				'free'  => LicenseType::Free->prefix(),
-				default => $kirby->request()->get('license')
-			};
-
-			$kirby->system()->register($license, $email);
+			$kirby = App::instance();
+			$kirby->system()->register(
+				$kirby->request()->get('license'),
+				$kirby->request()->get('email')
+			);
 
 			return [
 				'event'   => 'system.register',
-				'message' => match ($type) {
-					'free'  => I18n::translate('license.success.free'),
-					default => I18n::translate('license.success')
-				}
+				'message' => I18n::translate('license.success')
 			];
 			// @codeCoverageIgnoreEnd
 		}

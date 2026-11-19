@@ -41,14 +41,12 @@ class Site extends Model
 	 * Returns the setup for a dropdown option
 	 * which is used in the changes dropdown
 	 * for example.
-	 *
-	 * @deprecated 5.1.4
 	 */
 	public function dropdownOption(): array
 	{
 		return [
 			'icon' => 'home',
-			'text' => $this->model->toSafeString('{{ site.title }}'),
+			'text' => $this->model->title()->value(),
 		] + parent::dropdownOption();
 	}
 
@@ -94,11 +92,7 @@ class Site extends Model
 			'title'       => $model['title'],
 			'permissions' => [
 				...$props['permissions'],
-				// the home page check is kept for backward compatibility
-				// @todo Remove the home page check in 6.0.0
-				'preview' =>
-					$this->model->permissions()->can('preview') === true &&
-					$this->model->homePage()?->permissions()->can('preview') === true,
+				'preview' => $this->model->homePage()?->permissions()->can('preview') === true,
 			],
 		];
 	}

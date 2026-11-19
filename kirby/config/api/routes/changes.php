@@ -34,13 +34,4 @@ return [
 			);
 		}
 	],
-	[
-		'pattern' => '(:all)/changes/unlock',
-		'method'  => 'POST',
-		'action'  => function (string $path) {
-			return Changes::unlock(
-				model: Find::parent($path),
-			);
-		}
-	],
 ];

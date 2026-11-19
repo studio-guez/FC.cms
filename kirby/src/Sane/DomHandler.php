@@ -142,12 +142,11 @@ class DomHandler extends Handler
 	/**
 	 * Returns the sanitization options for the handler
 	 * (to be extended in child classes)
-	 * @internal
 	 *
 	 * @param bool $isExternal Whether the string is from an external file
 	 *                         that may be accessed directly
 	 */
-	public static function options(bool $isExternal): array
+	protected static function options(bool $isExternal): array
 	{
 		$options = [
 			'allowedDataUris'       => static::$allowedDataUris,

@@ -35,10 +35,6 @@ class Item
 	protected string $id;
 	protected array $params;
 	protected ModelWithContent $parent;
-
-	/**
-	 * @var TCollection
-	 */
 	protected Items $siblings;
 
 	/**
@@ -106,7 +102,7 @@ class Item
 	 * Returns the sibling collection
 	 * This is required by the HasSiblings trait
 	 *
-	 * @return TCollection
+	 * @psalm-return self::ITEMS_CLASS
 	 */
 	protected function siblingsCollection(): Items
 	{

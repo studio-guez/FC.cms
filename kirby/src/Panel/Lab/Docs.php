@@ -3,7 +3,6 @@
 namespace Kirby\Panel\Lab;
 
 use Kirby\Cms\App;
-use Kirby\Cms\Inventory;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Toolkit\A;
@@ -32,10 +31,10 @@ class Docs
 		$docs  = [];
 		$dist  = static::root();
 		$tmp   = static::root(true);
-		$files = Inventory::for($dist)['files'];
+		$files = Dir::inventory($dist)['files'];
 
 		if (Dir::exists($tmp) === true) {
-			$files = [...$files, ...Inventory::for($tmp)['files']];
+			$files = [...$files, ...Dir::inventory($tmp)['files']];
 		}
 
 		$docs = A::map(

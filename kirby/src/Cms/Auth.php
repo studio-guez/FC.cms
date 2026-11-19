@@ -91,10 +91,6 @@ class Auth
 
 		$timeout = $this->kirby->option('auth.challenge.timeout', 10 * 60);
 
-		// discard any previously issued challenge before starting a new one
-		$session->remove('kirby.challenge.type');
-		$session->remove('kirby.challenge.code');
-
 		// catch every exception to hide them from attackers
 		// unless auth debugging is enabled
 		try {
@@ -355,7 +351,6 @@ class Auth
 	/**
 	 * Returns the hashed ip of the visitor
 	 * which is used to track invalid logins
-	 * @deprecated 5.3.0 Use `$visitor->ip(hash: true)` instead. Will be removed in Kirby 6.
 	 */
 	public function ipHash(): string
 	{
@@ -370,7 +365,7 @@ class Auth
 	 */
 	public function isBlocked(string $email): bool
 	{
-		$ip     = $this->kirby->visitor()->ip(hash: true);
+		$ip     = $this->ipHash();
 		$log    = $this->log();
 		$trials = $this->kirby->option('auth.trials', 10);
 
@@ -389,26 +384,6 @@ class Auth
 		}
 
 		return false;
-	}
-
-	/**
-	 * Checks if the currently logged in user was authenticated
-	 * by a password reset challenge and may therefore set a new
-	 * password without knowing the previous one.
-	 * @since 5.5.4
-	 */
-	public function isResettingPassword(
-		Session|array|null $session = null
-	): bool {
-		$user = $this->user($session);
-
-		if ($user === null) {
-			return false;
-		}
-
-		$flag = $this->session($session)->get('kirby.resetPassword');
-
-		return $flag === $user->id();
 	}
 
 	/**
@@ -656,25 +631,16 @@ class Auth
 		// ensures that we log out the actually logged in user
 		$this->impersonate = null;
 
-		// clear the pending challenge and the CSRF token before the user
-		// is logged out; otherwise this leftover data would keep the session
-		// alive and its cookie would block the pages cache;
-		// a new CSRF token is generated on next use
+		// logout the current user if it exists
+		$this->user()?->logout();
+
+		// clear the pending challenge
 		$session = $this->kirby->session();
 		$session->remove('kirby.challenge.code');
 		$session->remove('kirby.challenge.email');
 		$session->remove('kirby.challenge.mode');
 		$session->remove('kirby.challenge.timeout');
 		$session->remove('kirby.challenge.type');
-		$session->remove('kirby.csrf');
-
-		// clear the password reset flag
-		$session->remove('kirby.resetPassword');
-
-		// logout the current user if it exists;
-		// run after clearing the session so `::logout()`
-		// can destroy a fully empty session
-		$this->user()?->logout();
 
 		// clear the status cache
 		$this->status = null;
@@ -703,7 +669,7 @@ class Auth
 			$this->kirby->trigger('user.login:failed', compact('email'));
 		}
 
-		$ip   = $this->kirby->visitor()->ip(hash: true);
+		$ip   = $this->ipHash();
 		$log  = $this->log();
 		$time = time();
 
@@ -891,12 +857,9 @@ class Auth
 					$this->logout();
 					$user->loginPasswordless();
 
-					// allow the user to set a new password without knowing the
-					// previous one; bound to the user the challenge was
-					// issued for, so that no other user of the same session
-					// can make use of the flag
+					// allow the user to set a new password without knowing the previous one
 					if ($mode === 'password-reset') {
-						$session->set('kirby.resetPassword', $user->id());
+						$session->set('kirby.resetPassword', true);
 					}
 
 					// clear the status cache

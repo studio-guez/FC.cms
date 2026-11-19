@@ -27,12 +27,6 @@ enum LicenseType: string
 	case Enterprise = 'enterprise';
 
 	/**
-	 * Develop/private installation
-	 * @since 5.5.0
-	 */
-	case Free = 'free';
-
-	/**
 	 * Invalid license codes
 	 */
 	case Invalid = 'invalid';
@@ -50,7 +44,6 @@ enum LicenseType: string
 		return match (true) {
 			static::Basic->isValidCode($code)      => static::Basic,
 			static::Enterprise->isValidCode($code) => static::Enterprise,
-			static::Free->isValidCode($code)       => static::Free,
 			static::Legacy->isValidCode($code)     => static::Legacy,
 			default                                => static::Invalid
 		};
@@ -77,7 +70,6 @@ enum LicenseType: string
 		return match ($this) {
 			static::Basic      => 38,
 			static::Enterprise => 38,
-			static::Free       => strlen(static::Free->prefix()),
 			static::Legacy     => 39,
 			static::Invalid    => 0,
 		};
@@ -91,7 +83,6 @@ enum LicenseType: string
 		return match ($this) {
 			static::Basic      => 'Kirby Basic',
 			static::Enterprise => 'Kirby Enterprise',
-			static::Free       => I18n::translate('license.free.label'),
 			static::Legacy     => 'Kirby 3',
 			static::Invalid    => I18n::translate('license.unregistered.label'),
 		};
@@ -105,7 +96,6 @@ enum LicenseType: string
 		return match ($this) {
 			static::Basic      => 'K-BAS-',
 			static::Enterprise => 'K-ENT-',
-			static::Free       => 'FREE',
 			static::Legacy     => 'K3-PRO-',
 			static::Invalid    => null,
 		};

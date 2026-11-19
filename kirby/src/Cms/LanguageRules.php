@@ -29,19 +29,6 @@ class LanguageRules
 	{
 		static::validLanguageCode($language);
 		static::validLanguageName($language);
-		static::validLanguageVariables($language);
-
-		$default = App::instance()->defaultLanguage();
-
-		if ($language->isDefault() === true && $default !== null) {
-			throw new LogicException(
-				key: 'language.create.default',
-				data: [
-					'code' => $default->code(),
-					'name' => $default->name()
-				]
-			);
-		}
 
 		if ($language->exists() === true) {
 			throw new DuplicateException(
@@ -81,7 +68,6 @@ class LanguageRules
 	): void {
 		static::validLanguageCode($newLanguage);
 		static::validLanguageName($newLanguage);
-		static::validLanguageVariables($newLanguage, $oldLanguage);
 
 		$kirby = App::instance();
 
@@ -137,53 +123,6 @@ class LanguageRules
 					'name' => $language->name()
 				]
 			);
-		}
-	}
-
-	/**
-	 * Validates the custom variables of a language. Only keys that are
-	 * new or whose value changed are checked, so that a variable which
-	 * is already stored never blocks an unrelated update.
-	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException If a variable key is invalid
-	 * @since 5.6.0
-	 */
-	public static function validLanguageVariables(
-		Language $newLanguage,
-		Language|null $oldLanguage = null
-	): void {
-		$old     = $oldLanguage?->translations() ?? [];
-		$changed = array_filter(
-			$newLanguage->translations(),
-			fn ($value, $key) => ($old[$key] ?? null) !== $value,
-			ARRAY_FILTER_USE_BOTH
-		);
-
-		if ($changed === []) {
-			return;
-		}
-
-		$core = App::instance()->coreI18nStrings($newLanguage->code());
-
-		foreach (array_keys($changed) as $key) {
-			if (is_numeric($key) === true) {
-				throw new InvalidArgumentException(
-					key: 'language.variable.numeric'
-				);
-			}
-
-			if ($key === '') {
-				throw new InvalidArgumentException(
-					key: 'language.variable.key'
-				);
-			}
-
-			if (isset($core[$key]) === true) {
-				throw new InvalidArgumentException(
-					key: 'language.variable.core',
-					data: ['key' => $key]
-				);
-			}
 		}
 	}
 }

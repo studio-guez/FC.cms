@@ -283,18 +283,7 @@ class System
 	 */
 	public function license(): License
 	{
-		if ($this->license !== null) {
-			return $this->license; // @codeCoverageIgnore
-		}
-
-		// load the license
-		$this->license = License::read();
-
-		// if the license has expired,
-		// try to get it reissued by the hub
-		$this->license->reissue();
-
-		return $this->license;
+		return $this->license ??= License::read();
 	}
 
 	/**
@@ -380,7 +369,7 @@ class System
 	{
 		return
 			version_compare(PHP_VERSION, '8.2.0', '>=') === true &&
-			version_compare(PHP_VERSION, '8.6.0', '<')  === true;
+			version_compare(PHP_VERSION, '8.5.0', '<')  === true;
 	}
 
 	/**
@@ -401,10 +390,8 @@ class System
 	 * @throws \Kirby\Exception\Exception
 	 * @throws \Kirby\Exception\InvalidArgumentException
 	 */
-	public function register(
-		string|null $license = null,
-		string|null $email = null
-	): bool {
+	public function register(string|null $license = null, string|null $email = null): bool
+	{
 		$license = new License(
 			code: $license,
 			domain: $this->indexUrl(),

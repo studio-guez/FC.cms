@@ -4,9 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Data\Data;
 use Kirby\Filesystem\F;
-use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Toolkit\I18n;
-use Kirby\Toolkit\Str;
 use Stringable;
 
 /**
@@ -97,48 +95,6 @@ class Role implements Stringable
 		return $this->name();
 	}
 
-	/**
-	 * Compares the current object with the given role object
-	 * @since 5.4.0
-	 */
-	public function is(Role|null $role = null): bool
-	{
-		if ($role === null) {
-			return false;
-		}
-
-		return $this->id() === $role->id();
-	}
-
-	/**
-	 * Checks if the role is accessible to the current user
-	 * @since 5.4.0
-	 */
-	public function isAccessible(): bool
-	{
-		$user = App::instance()->user();
-
-		// no access without authenticated user
-		if ($user === null) {
-			return false;
-		}
-
-		// check `user.access` for the current user with the same role
-		// (also ensures `access` option of the user's current role)
-		if ($user->role()->is($this) === true) {
-			return $user->isAccessible();
-		}
-
-		// check `users.access` for different roles
-		// (also ensures `access` option of the target role)
-		$tmpUser = new User([
-			'email' => 'test@getkirby.com',
-			'role'  => $this->id()
-		]);
-
-		return $tmpUser->isAccessible();
-	}
-
 	public function isAdmin(): bool
 	{
 		return $this->name() === 'admin';
@@ -149,7 +105,6 @@ class Role implements Stringable
 		return $this->name() === 'nobody';
 	}
 
-	#[BlockCollectionAccess]
 	public static function load(string $file, array $inject = []): static
 	{
 		$data = [
@@ -172,7 +127,7 @@ class Role implements Stringable
 
 	public function title(): string
 	{
-		return $this->title ??= Str::label($this->name());
+		return $this->title ??= ucfirst($this->name());
 	}
 
 	/**

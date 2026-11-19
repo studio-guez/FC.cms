@@ -1,5 +1,6 @@
 <?php
 
+use Kirby\Cms\App;
 use Kirby\Cms\Find;
 use Kirby\Panel\Ui\Buttons\LanguagesDropdown;
 
@@ -30,7 +31,7 @@ return [
 	'site.languages' => [
 		'pattern' => 'site/languages',
 		'options' => function () {
-			$site = Find::site();
+			$site = App::instance()->site();
 			return (new LanguagesDropdown($site))->options();
 		}
 	],

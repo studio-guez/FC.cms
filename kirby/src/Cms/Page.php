@@ -13,7 +13,6 @@ use Kirby\Http\Response;
 use Kirby\Panel\Page as Panel;
 use Kirby\Template\Template;
 use Kirby\Toolkit\A;
-use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Toolkit\LazyValue;
 use Kirby\Toolkit\Str;
 use Throwable;
@@ -124,7 +123,7 @@ class Page extends ModelWithContent
 	 */
 	public function __construct(array $props)
 	{
-		if (isset($props['slug']) === false || $props['slug'] === '') {
+		if (isset($props['slug']) === false) {
 			throw new InvalidArgumentException(
 				message: 'The page slug is required'
 			);
@@ -195,7 +194,6 @@ class Page extends ModelWithContent
 	 * Returns the url to the api endpoint
 	 * @internal
 	 */
-	#[BlockCollectionAccess]
 	public function apiUrl(bool $relative = false): string
 	{
 		if ($relative === true) {
@@ -300,7 +298,6 @@ class Page extends ModelWithContent
 	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException If the controller returns invalid objects for `kirby`, `site`, `pages` or `page`
 	 */
-	#[BlockCollectionAccess]
 	public function controller(
 		array $data = [],
 		string $contentType = 'html'
@@ -426,7 +423,6 @@ class Page extends ModelWithContent
 	 * @param array $options Options for `Kirby\Http\Uri` to create URL parts
 	 * @param int $code HTTP status code
 	 */
-	#[BlockCollectionAccess]
 	public function go(array $options = [], int $code = 302): void
 	{
 		Response::go($this->url($options), $code);
@@ -476,7 +472,6 @@ class Page extends ModelWithContent
 	/**
 	 * Returns the inventory of files children and content files
 	 */
-	#[BlockCollectionAccess]
 	public function inventory(): array
 	{
 		if ($this->inventory !== null) {
@@ -485,7 +480,7 @@ class Page extends ModelWithContent
 
 		$kirby = $this->kirby();
 
-		return $this->inventory = Inventory::for(
+		return $this->inventory = Dir::inventory(
 			$this->root(),
 			$kirby->contentExtension(),
 			$kirby->contentIgnore(),
@@ -773,7 +768,6 @@ class Page extends ModelWithContent
 	/**
 	 * Returns the absolute path to the media folder for the page
 	 */
-	#[BlockCollectionAccess]
 	public function mediaDir(): string
 	{
 		return $this->kirby()->root('media') . '/pages/' . $this->id();
@@ -782,7 +776,6 @@ class Page extends ModelWithContent
 	/**
 	 * @see `::mediaDir`
 	 */
-	#[BlockCollectionAccess]
 	public function mediaRoot(): string
 	{
 		return $this->mediaDir();
@@ -894,7 +887,6 @@ class Page extends ModelWithContent
 	 * Returns the preview URL with authentication for drafts and versions
 	 * @unstable
 	 */
-	#[BlockCollectionAccess]
 	public function previewUrl(VersionId|string $versionId = 'latest'): string|null
 	{
 		if ($this->permissions()->can('preview') !== true) {
@@ -915,7 +907,6 @@ class Page extends ModelWithContent
 	 * @param \Kirby\Content\VersionId|string|null $versionId Optional override for the auto-detected version to render
 	 * @throws \Kirby\Exception\NotFoundException If the default template cannot be found
 	 */
-	#[BlockCollectionAccess]
 	public function render(
 		array $data = [],
 		$contentType = 'html',
@@ -997,7 +988,7 @@ class Page extends ModelWithContent
 			if ($cache !== null && $response->cache() === true) {
 				$cache->set($cacheId, [
 					'html'        => $html,
-					'response'    => $response->toCacheArray(),
+					'response'    => $response->toArray(),
 					'usesAuth'    => $response->usesAuth(),
 					'usesCookies' => $response->usesCookies(),
 				], $response->expires() ?? 0);
@@ -1012,7 +1003,6 @@ class Page extends ModelWithContent
 	 * based on the token authentication in the current request
 	 * @unstable
 	 */
-	#[BlockCollectionAccess]
 	public function renderVersionFromRequest(): VersionId|null
 	{
 		$request = $this->kirby()->request();
@@ -1025,12 +1015,9 @@ class Page extends ModelWithContent
 			$versionId = VersionId::latest();
 		}
 
-		// authenticated requests can always be trusted;
-		// only resolve the expected token when one was sent
-		if (
-			$token !== '' &&
-			hash_equals($this->version($versionId)->previewToken(), $token) === true
-		) {
+		// authenticated requests can always be trusted
+		$expectedToken = $this->version($versionId)->previewToken();
+		if ($token !== '' && hash_equals($expectedToken, $token) === true) {
 			return $versionId;
 		}
 
@@ -1050,7 +1037,6 @@ class Page extends ModelWithContent
 	/**
 	 * @throws \Kirby\Exception\NotFoundException If the content representation cannot be found
 	 */
-	#[BlockCollectionAccess]
 	public function representation(mixed $type): Template
 	{
 		$kirby          = $this->kirby();
@@ -1070,7 +1056,6 @@ class Page extends ModelWithContent
 	 * Returns the absolute root to the page directory
 	 * No matter if it exists or not.
 	 */
-	#[BlockCollectionAccess]
 	public function root(): string
 	{
 		return $this->root ??= $this->kirby()->root('content') . '/' . $this->diruri();
@@ -1089,7 +1074,6 @@ class Page extends ModelWithContent
 	/**
 	 * Search all pages within the current page
 	 */
-	#[BlockCollectionAccess]
 	public function search(string|null $query = null, string|array $params = []): Pages
 	{
 		return $this->index()->search($query, $params);
@@ -1206,7 +1190,6 @@ class Page extends ModelWithContent
 	 * Converts the most important
 	 * properties to array
 	 */
-	#[BlockCollectionAccess]
 	public function toArray(): array
 	{
 		return [

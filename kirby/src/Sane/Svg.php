@@ -7,7 +7,6 @@ use DOMDocumentType;
 use DOMElement;
 use DOMXPath;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Http\Url;
 use Kirby\Toolkit\Dom;
 use Kirby\Toolkit\Str;
 
@@ -395,7 +394,7 @@ class Svg extends Xml
 	{
 		$element = $attr->ownerElement;
 		$name    = $attr->name;
-		$value   = Url::normalize($attr->value);
+		$value   = $attr->value;
 		$errors = [];
 
 		// block nested <use> elements ("Billion Laughs" DoS attack)
@@ -468,12 +467,11 @@ class Svg extends Xml
 
 	/**
 	 * Returns the sanitization options for the handler
-	 * @internal
 	 *
 	 * @param bool $isExternal Whether the string is from an external file
 	 *                         that may be accessed directly
 	 */
-	public static function options(bool $isExternal): array
+	protected static function options(bool $isExternal): array
 	{
 		return [
 			...parent::options($isExternal),

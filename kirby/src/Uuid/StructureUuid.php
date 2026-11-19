@@ -24,6 +24,11 @@ class StructureUuid extends FieldUuid
 	protected const FIELD = 'structure';
 
 	/**
+	 * @var \Kirby\Cms\StructureObject|null
+	 */
+	public Identifiable|null $model = null;
+
+	/**
 	 * Converts content field to a Structure collection
 	 * @unstable
 	 */

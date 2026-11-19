@@ -160,16 +160,22 @@ class ImageMagick extends Darkroom
 	 */
 	protected function resize(string $file, array $options): string
 	{
-		if ($crop = $options['crop'] ?? null) {
+		// simple resize
+		if ($options['crop'] === false) {
+			return '-thumbnail ' . escapeshellarg(sprintf('%sx%s!', $options['width'], $options['height']));
+		}
+
+		// crop based on focus point
+		if (Focus::isFocalPoint($options['crop']) === true) {
 			if ($focus = Focus::coords(
-				$crop,
+				$options['crop'],
 				$options['sourceWidth'],
 				$options['sourceHeight'],
 				$options['width'],
 				$options['height']
 			)) {
 				return sprintf(
-					'-crop %sx%s+%s+%s -thumbnail %sx%s^',
+					'-crop %sx%s+%s+%s -resize %sx%s^',
 					$focus['width'],
 					$focus['height'],
 					$focus['x1'],
@@ -180,7 +186,24 @@ class ImageMagick extends Darkroom
 			}
 		}
 
-		return '-thumbnail ' . escapeshellarg(sprintf('%sx%s^', $options['width'], $options['height']));
+		// translate the gravity option into something imagemagick understands
+		$gravity = match ($options['crop'] ?? null) {
+			'top left'     => 'NorthWest',
+			'top'          => 'North',
+			'top right'    => 'NorthEast',
+			'left'         => 'West',
+			'right'        => 'East',
+			'bottom left'  => 'SouthWest',
+			'bottom'       => 'South',
+			'bottom right' => 'SouthEast',
+			default        => 'Center'
+		};
+
+		$command  = '-thumbnail ' . escapeshellarg(sprintf('%sx%s^', $options['width'], $options['height']));
+		$command .= ' -gravity ' . escapeshellarg($gravity);
+		$command .= ' -crop ' . escapeshellarg(sprintf('%sx%s+0+0', $options['width'], $options['height']));
+
+		return $command;
 	}
 
 	/**
@@ -188,10 +211,8 @@ class ImageMagick extends Darkroom
 	 */
 	protected function save(string $file, array $options): string
 	{
-		// use the format: prefix to output in the specified format
-		// while writing to the original path
 		if ($options['format'] !== null) {
-			return escapeshellarg($options['format'] . ':' . $file);
+			$file = pathinfo($file, PATHINFO_DIRNAME) . '/' . pathinfo($file, PATHINFO_FILENAME) . '.' . $options['format'];
 		}
 
 		return escapeshellarg($file);

@@ -20,12 +20,6 @@ use ReflectionFunction;
  */
 class Controller
 {
-	/**
-	 * Cached parameter list of the wrapped closure;
-	 * @var \ReflectionParameter[]|null
-	 */
-	protected array|null $params = null;
-
 	public function __construct(
 		protected Closure $function
 	) {
@@ -33,11 +27,10 @@ class Controller
 
 	public function arguments(array $data = []): array
 	{
-		$this->params ??= (new ReflectionFunction($this->function))->getParameters();
-
+		$info = new ReflectionFunction($this->function);
 		$args = [];
 
-		foreach ($this->params as $param) {
+		foreach ($info->getParameters() as $param) {
 			$name = $param->getName();
 
 			if ($param->isVariadic() === true) {

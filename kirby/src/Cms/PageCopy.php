@@ -2,7 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Uuid\ModelUuid;
 use Kirby\Uuid\Uuid;
 use Kirby\Uuid\Uuids;
 
@@ -48,9 +47,8 @@ class PageCopy
 			return;
 		}
 
-		// don't use `toString()` here: $this->copy still holds the original's
-		// UUID, so it would cache that UUID as pointing to the copy
-		$old = ModelUuid::retrieveId($this->copy);
+		// store old UUID
+		$old = $this->copy->uuid()->toString();
 
 		// re-generate UUID for the page
 		$this->copy = $this->copy->save(
@@ -59,9 +57,7 @@ class PageCopy
 		);
 
 		// track UUID change
-		if ($old !== null) {
-			$this->uuids['page://' . $old] = $this->copy->uuid()->toString();
-		}
+		$this->uuids[$old] = $this->copy->uuid()->toString();
 
 		$this->convertFileUuids($language);
 		$this->convertChildrenUuids($language);
@@ -112,7 +108,7 @@ class PageCopy
 		if ($this->withFiles === true) {
 			foreach ($this->copy->files() as $file) {
 				// store old file UUID
-				$old = ModelUuid::retrieveId($file);
+				$old = $file->uuid()->toString();
 
 				// re-generate UUID for the file
 				$file = $file->save(
@@ -121,9 +117,7 @@ class PageCopy
 				);
 
 				// track UUID change
-				if ($old !== null) {
-					$this->uuids['file://' . $old] = $file->uuid()->toString();
-				}
+				$this->uuids[$old] = $file->uuid()->toString();
 			}
 		}
 

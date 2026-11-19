@@ -19,7 +19,7 @@ abstract class ModelPermissions
 	protected const CATEGORY = 'model';
 	protected array $options;
 
-	public static array $cache = [];
+	protected static array $cache = [];
 
 	public function __construct(protected ModelWithContent|Language $model)
 	{
@@ -130,7 +130,7 @@ abstract class ModelPermissions
 	): bool {
 		$role     = $model->kirby()->role()?->id() ?? '__none__';
 		$category = static::category($model);
-		$cacheKey = $category . '.' . $action . '/' . static::cacheKey($model) . '/' . $role . '/' . ($default === true ? 'true' : 'false');
+		$cacheKey = $category . '.' . $action . '/' . static::cacheKey($model) . '/' . $role;
 
 		if (isset(static::$cache[$cacheKey]) === true) {
 			return static::$cache[$cacheKey];
@@ -140,7 +140,7 @@ abstract class ModelPermissions
 			throw new LogicException('Cannot use permission cache for dynamically-determined permission');
 		}
 
-		return static::$cache[$cacheKey] = $model->permissions()->can($action, $default);
+		return static::$cache[$cacheKey] = $model->permissions()->can($action, $role, $default);
 	}
 
 	/**

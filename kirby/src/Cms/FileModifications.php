@@ -5,7 +5,6 @@ namespace Kirby\Cms;
 use Kirby\Content\Field;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Asset;
-use Kirby\Toolkit\BlockCollectionAccess;
 
 /**
  * Trait for image resizing, blurring etc.
@@ -21,7 +20,6 @@ trait FileModifications
 	/**
 	 * Blurs the image by the given amount of pixels
 	 */
-	#[BlockCollectionAccess]
 	public function blur(int|bool $pixels = true): FileVersion|File|Asset
 	{
 		return $this->thumb(['blur' => $pixels]);
@@ -30,7 +28,6 @@ trait FileModifications
 	/**
 	 * Converts the image to black and white
 	 */
-	#[BlockCollectionAccess]
 	public function bw(): FileVersion|File|Asset
 	{
 		return $this->thumb(['grayscale' => true]);
@@ -39,7 +36,6 @@ trait FileModifications
 	/**
 	 * Crops the image by the given width and height
 	 */
-	#[BlockCollectionAccess]
 	public function crop(
 		int $width,
 		int|null $height = null,
@@ -70,7 +66,6 @@ trait FileModifications
 	/**
 	 * Alias for File::bw()
 	 */
-	#[BlockCollectionAccess]
 	public function grayscale(): FileVersion|File|Asset
 	{
 		return $this->thumb(['grayscale' => true]);
@@ -79,7 +74,6 @@ trait FileModifications
 	/**
 	 * Alias for File::bw()
 	 */
-	#[BlockCollectionAccess]
 	public function greyscale(): FileVersion|File|Asset
 	{
 		return $this->thumb(['grayscale' => true]);
@@ -88,7 +82,6 @@ trait FileModifications
 	/**
 	 * Sets the JPEG compression quality
 	 */
-	#[BlockCollectionAccess]
 	public function quality(int $quality): FileVersion|File|Asset
 	{
 		return $this->thumb(['quality' => $quality]);
@@ -100,7 +93,6 @@ trait FileModifications
 	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException
 	 */
-	#[BlockCollectionAccess]
 	public function resize(
 		int|null $width = null,
 		int|null $height = null,
@@ -116,7 +108,6 @@ trait FileModifications
 	/**
 	 * Sharpens the image
 	 */
-	#[BlockCollectionAccess]
 	public function sharpen(int $amount = 50): FileVersion|File|Asset
 	{
 		return $this->thumb(['sharpen' => $amount]);
@@ -128,7 +119,6 @@ trait FileModifications
 	 * also be set up in the config with the thumbs.srcsets option.
 	 * @since 3.1.0
 	 */
-	#[BlockCollectionAccess]
 	public function srcset(array|string|null $sizes = null): string|null
 	{
 		if (empty($sizes) === true) {
@@ -178,7 +168,6 @@ trait FileModifications
 	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException
 	 */
-	#[BlockCollectionAccess]
 	public function thumb(
 		array|string|null $options = null
 	): FileVersion|File|Asset {

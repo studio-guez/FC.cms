@@ -3,7 +3,6 @@
 namespace Kirby\Panel;
 
 use Kirby\Cms\App;
-use Kirby\Cms\Find;
 use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Image\QrCode;
@@ -29,7 +28,7 @@ class UserTotpEnableDialog
 	public function __construct()
 	{
 		$this->kirby = App::instance();
-		$this->user  = Find::user();
+		$this->user  = $this->kirby->user();
 	}
 
 	/**

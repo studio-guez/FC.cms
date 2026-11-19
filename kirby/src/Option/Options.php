@@ -39,13 +39,8 @@ class Options extends Collection
 		return A::map($this->data, fn ($item) => (array)$item);
 	}
 
-	/**
-	 * @param bool $resolve Deprecated, will be removed in v6
-	 */
-	public static function factory(
-		array $items = [],
-		bool $resolve = true
-	): static {
+	public static function factory(array $items = []): static
+	{
 		$collection = new static();
 
 		foreach ($items as $key => $option) {
@@ -61,19 +56,19 @@ class Options extends Collection
 				};
 			}
 
-			$option = Option::factory($option, $resolve);
+			$option = Option::factory($option);
 			$collection->__set($option->id(), $option);
 		}
 
 		return $collection;
 	}
 
-	public function render(ModelWithContent $model, bool $safeMode = true): array
+	public function render(ModelWithContent $model): array
 	{
 		$options = [];
 
 		foreach ($this->data as $key => $option) {
-			$options[$key] = $option->render($model, $safeMode);
+			$options[$key] = $option->render($model);
 		}
 
 		return array_values($options);

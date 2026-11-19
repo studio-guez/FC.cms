@@ -29,7 +29,7 @@ class UserTotpDisableDialog
 		string|null $id = null
 	) {
 		$this->kirby = App::instance();
-		$this->user  = Find::user($id);
+		$this->user  = $id ? Find::user($id) : $this->kirby->user();
 	}
 
 	/**

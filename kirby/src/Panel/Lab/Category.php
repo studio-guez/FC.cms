@@ -3,7 +3,6 @@
 namespace Kirby\Panel\Lab;
 
 use Kirby\Cms\App;
-use Kirby\Cms\Inventory;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Toolkit\A;
@@ -45,7 +44,7 @@ class Category
 	{
 		// all core lab examples from `kirby/panel/lab`
 		$examples = A::map(
-			Inventory::for(static::base())['children'],
+			Dir::inventory(static::base())['children'],
 			fn ($props) => (new static($props['dirname']))->toArray()
 		);
 
@@ -70,7 +69,7 @@ class Category
 	public function examples(): array
 	{
 		return A::map(
-			Inventory::for($this->root)['children'],
+			Dir::inventory($this->root)['children'],
 			fn ($props) => $this->example($props['dirname'])->toArray()
 		);
 	}
@@ -100,7 +99,7 @@ class Category
 
 	public function name(): string
 	{
-		return $this->props['name'] ?? Str::label($this->id);
+		return $this->props['name'] ?? ucfirst($this->id);
 	}
 
 	public function root(): string

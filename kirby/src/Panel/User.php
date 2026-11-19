@@ -100,7 +100,7 @@ class User extends Model
 		$result[] = [
 			'dialog'   => $url . '/changePassword',
 			'icon'     => 'key',
-			'text'     => I18n::translate('user.' . ($this->model->hasPassword() === true ? 'changePassword' : 'setPassword')),
+			'text'     => I18n::translate('user.changePassword'),
 			'disabled' => $this->isDisabledDropdownOption('changePassword', $options, $permissions)
 		];
 
@@ -138,14 +138,13 @@ class User extends Model
 	 * Returns the setup for a dropdown option
 	 * which is used in the changes dropdown
 	 * for example.
-	 *
-	 * @deprecated 5.1.4 Use the Kirby\Panel\Ui\Item\UserItem class instead
 	 */
 	public function dropdownOption(): array
 	{
-		return (new UserItem(user: $this->model))->props() + [
-			'icon' => 'user'
-		];
+		return [
+			'icon' => 'user',
+			'text' => $this->model->username(),
+		] + parent::dropdownOption();
 	}
 
 	public function home(): string|null
@@ -224,12 +223,11 @@ class User extends Model
 	 */
 	public function prevNext(): array
 	{
-		$user     = $this->model;
-		$siblings = $user->siblings()->filter('isListable', true);
+		$user = $this->model;
 
 		return [
-			'next' => fn () => $this->toPrevNextLink($user->next($siblings), 'username'),
-			'prev' => fn () => $this->toPrevNextLink($user->prev($siblings), 'username')
+			'next' => fn () => $this->toPrevNextLink($user->next(), 'username'),
+			'prev' => fn () => $this->toPrevNextLink($user->prev(), 'username')
 		];
 	}
 

@@ -107,13 +107,8 @@ class Collection
 	 */
 	public function toResponse(): array
 	{
-		if (is_array($query = $this->api->requestQuery('query')) === true) {
-			$this->data = $this->data->query(array_filter([
-				'limit'    => $query['limit'] ?? null,
-				'offset'   => $query['offset'] ?? null,
-				'paginate' => $query['paginate'] ?? null,
-				'search'   => $query['search'] ?? null,
-			], fn ($value) => $value !== null));
+		if ($query = $this->api->requestQuery('query')) {
+			$this->data = $this->data->query($query);
 		}
 
 		if (!$this->data->pagination()) {
