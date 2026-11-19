@@ -15,7 +15,7 @@ return [
         'basicAuth' => true,
         'allowInsecure' => true,
     ],
-    'debug' => true,
+    'debug' => false,
     'kql' => [
         'auth' => true
     ],
